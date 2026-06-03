@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* -- Design Tokens -------------------------------------------------------- */
+:root {
+  /* Brand — Savanna Earth */
+  --color-brand-50:  #fdf8f0;
+  --color-brand-100: #faefd9;
+  --color-brand-200: #f3d9a8;
+  --color-brand-300: #e9bc6d;
+  --color-brand-400: #dd9a3c;
+  --color-brand-500: #c67d20;
+  --color-brand-600: #a66018;
+  --color-brand-700: #854918;
+  --color-brand-800: #6d3b1a;
+  --color-brand-900: #5c3219;
+  --color-brand-950: #34190a;
+
+  /* Accent — Coastal Teal */
+  --color-accent-50:  #edfafa;
+  --color-accent-100: #d5f5f6;
+  --color-accent-400: #16bdca;
+  --color-accent-500: #0694a2;
+  --color-accent-600: #047481;
+
+  /* Surfaces */
+  --color-surface:         #ffffff;
+  --color-surface-raised:  #fafaf9;
+  --color-surface-overlay: rgba(0, 0, 0, 0.45);
+
+  /* Borders */
+  --color-border:       #e5e4e7;
+  --color-border-strong:#cccacc;
+
+  /* Text */
+  --color-text-primary:   #08060d;
+  --color-text-secondary: #4b4856;
+  --color-text-muted:     #6b6375;
+  --color-text-inverse:   #ffffff;
+
+  /* Status colours */
+  --color-status-pending:     #f59e0b;
+  --color-status-confirmed:   #3b82f6;
+  --color-status-in-progress: #8b5cf6;
+  --color-status-completed:   #10b981;
+  --color-status-cancelled:   #ef4444;
+
+  /* Typography */
+  --font-size-display-xl: clamp(2.5rem, 5vw, 4.5rem);
+  --font-size-display-lg: clamp(2rem, 4vw, 3.5rem);
+
+  /* Spacing */
+  --spacing-section-y: clamp(3rem, 8vw, 6rem);
+  --spacing-section-x: clamp(1rem, 5vw, 2.5rem);
+  --spacing-card-p:    1.5rem;
+
+  /* Shape */
+  --radius-card: 0.75rem;
+  --radius-btn:  0.5rem;
+
+  /* Shadow */
+  --shadow-card:       0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-modal:      0 20px 25px -5px rgb(0 0 0 / 0.12), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode token overrides */
+.dark {
+  --color-surface:         #0f0e12;
+  --color-surface-raised:  #1a1820;
+  --color-border:          #2a2830;
+  --color-border-strong:   #3d3b47;
+  --color-text-primary:    #f5f3f7;
+  --color-text-secondary:  #b8b4c0;
+  --color-text-muted:      #7d7988;
+}
+
+/* -- Global resets -------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
