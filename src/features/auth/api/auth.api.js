@@ -6,10 +6,10 @@ import {
   updateProfile,
 } from 'firebase/auth';
 
-import { httpClient } from '@/shared/api/httpClient';
-import { useAuthStore } from '@/shared/store/authStore';
-import { auth } from '@/shared/providers/firebase/firebaseConfig';
-import { normaliseError } from '@/shared/api/errorNormaliser';
+import httpClient, { normaliseError } from '@/shared/api';
+import { useAuthStore } from '@/shared/store';
+import { auth } from '@/config/firebase';
+
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 

@@ -1,4 +1,11 @@
-// TODO: useQuery(['booking', id], getBookingById)
+import { useQuery } from '@tanstack/react-query';
+import { getBookingById } from '../api/bookings.api';
+
 export function useBooking(id) {
-  return { data: null, isLoading: false, error: null };
+  return useQuery({
+    queryKey: ['booking', id],
+    queryFn: () => getBookingById(id),
+    enabled: !!id,
+  });
 }
+

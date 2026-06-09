@@ -32,8 +32,8 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 
-import { db, auth } from '@/shared/providers/firebase/firebaseConfig';
-import { normaliseError } from '@/shared/api/errorNormaliser';
+import { db, auth } from '@/config/firebase';
+import { normaliseError } from '@/shared/api';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

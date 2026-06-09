@@ -1,7 +1,17 @@
-// TODO: Implement usePayment
-// Polls GET /payments/:id every 3s while status is 'unpaid'
-// Stops polling on 'fully_paid' | 'failed'; navigates accordingly
+import { useQuery } from '@tanstack/react-query';
+import { getPaymentStatus } from '../api/payments.api';
 
 export function usePayment(paymentId) {
-  return { data: null, isLoading: false, error: null };
+  return useQuery({
+    queryKey: ['payment', paymentId],
+    queryFn: () => getPaymentStatus(paymentId),
+    enabled: Boolean(paymentId),
+    refetchInterval: (query) => {
+      const status = query.state.data?.status;
+      if (!status || status === 'unpaid' || status === 'partially_paid') {
+        return 3000;
+      }
+      return false;
+    },
+  });
 }

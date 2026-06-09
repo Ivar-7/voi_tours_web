@@ -1,4 +1,10 @@
-// TODO: useQuery(['bookings', 'me', filters], getMyBookings)
+import { useQuery } from '@tanstack/react-query';
+import { getMyBookings } from '../api/bookings.api';
+
 export function useBookings(filters = {}) {
-  return { data: [], isLoading: false, error: null };
+  return useQuery({
+    queryKey: ['bookings', 'me', filters],
+    queryFn: () => getMyBookings(filters),
+  });
 }
+

@@ -1,4 +1,10 @@
-// TODO: useQuery(['packages', filters], getPackages)
+import { useQuery } from '@tanstack/react-query';
+import { getPackages } from '../api/packages.api';
+
 export function usePackages(filters = {}) {
-  return { data: [], isLoading: false, error: null };
+  return useQuery({
+    queryKey: ['packages', filters],
+    queryFn: () => getPackages(filters),
+  });
 }
+

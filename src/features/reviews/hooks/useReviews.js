@@ -1,4 +1,10 @@
-// TODO: useQuery(['reviews', filters], getReviews)
+import { useQuery } from '@tanstack/react-query';
+import { getReviews } from '../api/reviews.api';
+
 export function useReviews(filters = {}) {
-  return { data: [], isLoading: false, error: null };
+  return useQuery({
+    queryKey: ['reviews', filters],
+    queryFn: () => getReviews(filters),
+  });
 }
+
