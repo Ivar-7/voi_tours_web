@@ -1,80 +1,94 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+/* eslint-disable react-refresh/only-export-components -- this file is router configuration, not a component module */
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
-import RootLayout from '@app/layouts/RootLayout';
-import AuthLayout from '@app/layouts/AuthLayout';
-import DashboardLayout from '@app/layouts/DashboardLayout';
-import AdminLayout from '@app/layouts/AdminLayout';
-import ProtectedRoute from '@features/auth/components/ProtectedRoute';
-import RoleGuard from '@features/auth/components/RoleGuard';
-import LoadingState from '@shared/components/feedback/LoadingState';
-import ErrorBoundary from '@shared/components/feedback/ErrorBoundary';
-import NotFoundPage from '@app/pages/NotFoundPage';
+import RootLayout from "@app/layouts/RootLayout";
+import AuthLayout from "@app/layouts/AuthLayout";
+import DashboardLayout from "@app/layouts/DashboardLayout";
+import AdminLayout from "@app/layouts/AdminLayout";
+import ProtectedRoute from "@features/auth/components/ProtectedRoute";
+import RoleGuard from "@features/auth/components/RoleGuard";
+import LoadingState from "@shared/components/feedback/LoadingState";
+import ErrorBoundary from "@shared/components/feedback/ErrorBoundary";
+import NotFoundPage from "@app/pages/NotFoundPage";
 
 // ── Lazy page imports ────────────────────────────────────────────────────────
 
-const HomePage = lazy(() => import('@features/home/pages/HomePage'));
+const HomePage = lazy(() => import("@features/home/pages/HomePage"));
 
 const DestinationsPage = lazy(
-  () => import('@features/destinations/pages/DestinationsPage'),
+  () => import("@features/destinations/pages/DestinationsPage"),
 );
 const DestinationDetailPage = lazy(
-  () => import('@features/destinations/pages/DestinationDetailPage'),
+  () => import("@features/destinations/pages/DestinationDetailPage"),
 );
 
 const PackagesPage = lazy(
-  () => import('@features/packages/pages/PackagesPage'),
+  () => import("@features/packages/pages/PackagesPage"),
 );
 const PackageDetailPage = lazy(
-  () => import('@features/packages/pages/PackageDetailPage'),
+  () => import("@features/packages/pages/PackageDetailPage"),
 );
 
-const ReviewsPage = lazy(() => import('@features/reviews/pages/ReviewsPage'));
-const InquiryPage = lazy(
-  () => import('@features/inquiries/pages/InquiryPage'),
-);
+const ReviewsPage = lazy(() => import("@features/reviews/pages/ReviewsPage"));
+const InquiryPage = lazy(() => import("@features/inquiries/pages/InquiryPage"));
 
-const LoginPage = lazy(() => import('@features/auth/pages/LoginPage'));
-const RegisterPage = lazy(() => import('@features/auth/pages/RegisterPage'));
+const LoginPage = lazy(() => import("@features/auth/pages/LoginPage"));
+const RegisterPage = lazy(() => import("@features/auth/pages/RegisterPage"));
 const ForgotPasswordPage = lazy(
-  () => import('@features/auth/pages/ForgotPasswordPage'),
+  () => import("@features/auth/pages/ForgotPasswordPage"),
 );
 
 const MyBookingsPage = lazy(
-  () => import('@features/bookings/pages/MyBookingsPage'),
+  () => import("@features/bookings/pages/MyBookingsPage"),
 );
 const BookingDetailPage = lazy(
-  () => import('@features/bookings/pages/BookingDetailPage'),
+  () => import("@features/bookings/pages/BookingDetailPage"),
 );
-const BookingPage = lazy(() => import('@features/bookings/pages/BookingPage'));
+const BookingPage = lazy(() => import("@features/bookings/pages/BookingPage"));
 const BookingSuccessPage = lazy(
-  () => import('@features/bookings/pages/BookingSuccessPage'),
+  () => import("@features/bookings/pages/BookingSuccessPage"),
 );
 
-const PaymentPage = lazy(() => import('@features/payments/pages/PaymentPage'));
+const PaymentPage = lazy(() => import("@features/payments/pages/PaymentPage"));
 const PaymentSuccessPage = lazy(
-  () => import('@features/payments/pages/PaymentSuccessPage'),
+  () => import("@features/payments/pages/PaymentSuccessPage"),
 );
 const PaymentFailedPage = lazy(
-  () => import('@features/payments/pages/PaymentFailedPage'),
+  () => import("@features/payments/pages/PaymentFailedPage"),
 );
 
-const ProfilePage = lazy(() => import('@features/profile/pages/ProfilePage'));
+const ProfilePage = lazy(() => import("@features/profile/pages/ProfilePage"));
 
 const AdminDashboardPage = lazy(
-  () => import('@features/admin/pages/AdminDashboardPage'),
+  () => import("@features/admin/pages/AdminDashboardPage"),
+);
+const AdminDestinationsPage = lazy(
+  () => import("@features/destinations/pages/AdminDestinationsPage"),
+);
+const AdminDestinationCreatePage = lazy(
+  () => import("@features/destinations/pages/AdminDestinationCreatePage"),
+);
+const AdminDestinationEditPage = lazy(
+  () => import("@features/destinations/pages/AdminDestinationEditPage"),
+);
+const AdminDestinationDetailPage = lazy(
+  () => import("@features/destinations/pages/AdminDestinationDetailPage"),
 );
 const AdminBookingsPage = lazy(
-  () => import('@features/admin/pages/AdminBookingsPage'),
+  () => import("@features/admin/pages/AdminBookingsPage"),
 );
 const AdminUsersPage = lazy(
-  () => import('@features/admin/pages/AdminUsersPage'),
+  () => import("@features/admin/pages/AdminUsersPage"),
 );
 const AdminInquiriesPage = lazy(
-  () => import('@features/admin/pages/AdminInquiriesPage'),
+  () => import("@features/admin/pages/AdminInquiriesPage"),
 );
 const AdminPackagesPage = lazy(
-  () => import('@features/admin/pages/AdminPackagesPage'),
+  () => import("@features/admin/pages/AdminPackagesPage"),
+);
+const AdminPackageDetailPage = lazy(
+  () => import("@features/admin/pages/AdminPackageDetailPage"),
 );
 
 // ── Suspense wrapper ─────────────────────────────────────────────────────────
@@ -90,38 +104,38 @@ const withSuspense = (element) => (
 const router = createBrowserRouter([
   // ── Public ──────────────────────────────────────────────────────────────
   {
-    path: '/',
+    path: "/",
     element: <RootLayout />,
     children: [
       { index: true, element: withSuspense(<HomePage />) },
       {
-        path: 'destinations',
+        path: "destinations",
         element: withSuspense(<DestinationsPage />),
       },
       {
-        path: 'destinations/:slug',
+        path: "destinations/:slug",
         element: withSuspense(<DestinationDetailPage />),
       },
-      { path: 'packages', element: withSuspense(<PackagesPage />) },
+      { path: "packages", element: withSuspense(<PackagesPage />) },
       {
-        path: 'packages/:slug',
+        path: "packages/:slug",
         element: withSuspense(<PackageDetailPage />),
       },
-      { path: 'reviews', element: withSuspense(<ReviewsPage />) },
-      { path: 'inquiry', element: withSuspense(<InquiryPage />) },
+      { path: "reviews", element: withSuspense(<ReviewsPage />) },
+      { path: "inquiry", element: withSuspense(<InquiryPage />) },
     ],
   },
 
   // ── Auth ────────────────────────────────────────────────────────────────
   {
-    path: '/auth',
+    path: "/auth",
     element: <AuthLayout />,
     children: [
       { index: true, element: <Navigate to="login" replace /> },
-      { path: 'login', element: withSuspense(<LoginPage />) },
-      { path: 'register', element: withSuspense(<RegisterPage />) },
+      { path: "login", element: withSuspense(<LoginPage />) },
+      { path: "register", element: withSuspense(<RegisterPage />) },
       {
-        path: 'forgot-password',
+        path: "forgot-password",
         element: withSuspense(<ForgotPasswordPage />),
       },
     ],
@@ -129,7 +143,7 @@ const router = createBrowserRouter([
 
   // ── Protected — customer dashboard ──────────────────────────────────────
   {
-    path: '/dashboard',
+    path: "/dashboard",
     element: (
       <ProtectedRoute>
         <DashboardLayout />
@@ -137,65 +151,85 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="bookings" replace /> },
-      { path: 'bookings', element: withSuspense(<MyBookingsPage />) },
+      { path: "bookings", element: withSuspense(<MyBookingsPage />) },
       {
-        path: 'bookings/:id',
+        path: "bookings/:id",
         element: withSuspense(<BookingDetailPage />),
       },
       // :type = safari | sgr_transfer | hotel | event | delivery | flight
-      { path: 'book/:type', element: withSuspense(<BookingPage />) },
+      { path: "book/:type", element: withSuspense(<BookingPage />) },
       {
-        path: 'book/:type/success',
+        path: "book/:type/success",
         element: withSuspense(<BookingSuccessPage />),
       },
       {
-        path: 'bookings/:bookingId/pay',
+        path: "bookings/:bookingId/pay",
         element: withSuspense(<PaymentPage />),
       },
       {
-        path: 'payment/success',
+        path: "payment/success",
         element: withSuspense(<PaymentSuccessPage />),
       },
       {
-        path: 'payment/failed',
+        path: "payment/failed",
         element: withSuspense(<PaymentFailedPage />),
       },
-      { path: 'profile', element: withSuspense(<ProfilePage />) },
+      { path: "profile", element: withSuspense(<ProfilePage />) },
     ],
   },
 
   // ── Protected — admin / agent ────────────────────────────────────────────
   {
-    path: '/admin',
+    path: "/admin",
     element: (
-      <RoleGuard roles={['admin', 'agent']}>
+      <RoleGuard roles={["admin", "agent"]}>
         <AdminLayout />
       </RoleGuard>
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       {
-        path: 'dashboard',
+        path: "dashboard",
         element: withSuspense(<AdminDashboardPage />),
       },
       {
-        path: 'bookings',
+        path: "destinations",
+        element: withSuspense(<AdminDestinationsPage />),
+      },
+      {
+        path: "destinations/new",
+        element: withSuspense(<AdminDestinationCreatePage />),
+      },
+      {
+        path: "destinations/:id",
+        element: withSuspense(<AdminDestinationDetailPage />),
+      },
+      {
+        path: "destinations/:id/edit",
+        element: withSuspense(<AdminDestinationEditPage />),
+      },
+      {
+        path: "bookings",
         element: withSuspense(<AdminBookingsPage />),
       },
-      { path: 'users', element: withSuspense(<AdminUsersPage />) },
+      { path: "users", element: withSuspense(<AdminUsersPage />) },
       {
-        path: 'inquiries',
+        path: "inquiries",
         element: withSuspense(<AdminInquiriesPage />),
       },
       {
-        path: 'packages',
+        path: "packages",
         element: withSuspense(<AdminPackagesPage />),
+      },
+      {
+        path: "packages/:id",
+        element: withSuspense(<AdminPackageDetailPage />),
       },
     ],
   },
 
   // ── 404 ─────────────────────────────────────────────────────────────────
-  { path: '*', element: <NotFoundPage /> },
+  { path: "*", element: <NotFoundPage /> },
 ]);
 
 export default router;

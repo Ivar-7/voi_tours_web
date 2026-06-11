@@ -5,18 +5,18 @@
  * @returns {string}
  */
 export function formatSafaricomPhone(phone) {
-  if (!phone) return '';
-  const digits = phone.replace(/\D/g, '');
-  if (digits.startsWith('0')) {
-    return '+254' + digits.substring(1);
+  if (!phone) return "";
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0")) {
+    return "+254" + digits.substring(1);
   }
-  if (digits.startsWith('254')) {
-    return '+' + digits;
+  if (digits.startsWith("254")) {
+    return "+" + digits;
   }
-  if (phone.startsWith('+254')) {
-    return '+' + digits;
+  if (phone.startsWith("+254")) {
+    return "+" + digits;
   }
-  return '+254' + digits;
+  return "+254" + digits;
 }
 
 /**
@@ -32,4 +32,3 @@ export function validateSafaricomPhone(phone) {
   const regex = /^\+254(7[0-2,4-6,9]|1[1-2])[0-9]{7}$/;
   return regex.test(formatted);
 }
-

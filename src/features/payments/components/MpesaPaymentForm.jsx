@@ -1,14 +1,18 @@
-import { useMemo, useState } from 'react';
-import { Loader2, Phone, ShieldCheck } from 'lucide-react';
-import { validateSafaricomPhone, formatSafaricomPhone } from '../services/mpesa.service';
-import { useMpesaPayment } from '../hooks/useMpesaPayment';
-import PaymentStatusPoller from './PaymentStatusPoller';
+import { useMemo, useState } from "react";
+import { Loader2, Phone, ShieldCheck } from "lucide-react";
+import {
+  validateSafaricomPhone,
+  formatSafaricomPhone,
+} from "../services/mpesa.service";
+import { useMpesaPayment } from "../hooks/useMpesaPayment";
+import PaymentStatusPoller from "./PaymentStatusPoller";
 
 export default function MpesaPaymentForm({ booking }) {
-  const [phone, setPhone] = useState('');
-  const [fieldError, setFieldError] = useState('');
-  const [resolvedPaymentId, setResolvedPaymentId] = useState('');
-  const { mutateAsync, isPending, checkoutRequestId, error } = useMpesaPayment();
+  const [phone, setPhone] = useState("");
+  const [fieldError, setFieldError] = useState("");
+  const [resolvedPaymentId, setResolvedPaymentId] = useState("");
+  const { mutateAsync, isPending, checkoutRequestId, error } =
+    useMpesaPayment();
 
   const paymentId = resolvedPaymentId || checkoutRequestId;
 
@@ -19,11 +23,13 @@ export default function MpesaPaymentForm({ booking }) {
     const normalisedPhone = formatSafaricomPhone(phone);
 
     if (!validateSafaricomPhone(normalisedPhone)) {
-      setFieldError('Enter a valid Safaricom number starting with 07, 01 or +254.');
+      setFieldError(
+        "Enter a valid Safaricom number starting with 07, 01 or +254.",
+      );
       return;
     }
 
-    setFieldError('');
+    setFieldError("");
     const response = await mutateAsync({
       bookingId: booking.id,
       phone: normalisedPhone,
@@ -38,7 +44,7 @@ export default function MpesaPaymentForm({ booking }) {
         response?.payment?.id ??
         response?.checkoutRequestId ??
         response?.checkout_request_id ??
-        '',
+        "",
     );
   }
 
@@ -51,7 +57,8 @@ export default function MpesaPaymentForm({ booking }) {
             <div>
               <p className="text-sm font-medium">Check your phone</p>
               <p className="text-sm text-emerald-800/90 dark:text-emerald-200/80">
-                We have sent the M-Pesa prompt to {formattedPhone || 'your phone'}.
+                We have sent the M-Pesa prompt to{" "}
+                {formattedPhone || "your phone"}.
               </p>
             </div>
           </div>
@@ -73,7 +80,7 @@ export default function MpesaPaymentForm({ booking }) {
             value={phone}
             onChange={(event) => {
               setPhone(event.target.value);
-              setFieldError('');
+              setFieldError("");
             }}
             placeholder="+2547XXXXXXXX"
             inputMode="tel"

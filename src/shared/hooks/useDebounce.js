@@ -1,7 +1,18 @@
 // TODO: Implement useDebounce
 // Returns a debounced version of the given value after `delay` ms
 
+import { useEffect, useState } from "react";
+
 export function useDebounce(value, delay = 300) {
-  // placeholder
-  return value;
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => window.clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedValue;
 }

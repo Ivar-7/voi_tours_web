@@ -1,9 +1,9 @@
 export class AppError extends Error {
   constructor(message, status, code, fieldErrors = {}) {
     super(message);
-    this.name = 'AppError';
+    this.name = "AppError";
     this.status = status || 500;
-    this.code = code || 'UNKNOWN';
+    this.code = code || "UNKNOWN";
     this.fieldErrors = fieldErrors || {};
   }
 }
@@ -20,9 +20,9 @@ export function normalizeError(error) {
     return error;
   }
 
-  let message = 'An unexpected error occurred';
+  let message = "An unexpected error occurred";
   let status = 500;
-  let code = 'UNKNOWN';
+  let code = "UNKNOWN";
   let fieldErrors = {};
 
   // 1. Handle Axios/REST API Errors
@@ -30,7 +30,7 @@ export function normalizeError(error) {
     const data = error.response?.data;
     status = error.response?.status || 500;
     message = data?.message || data?.detail || error.message || message;
-    code = data?.code || error.code || 'API_ERROR';
+    code = data?.code || error.code || "API_ERROR";
     fieldErrors = data?.fieldErrors || data?.errors || {};
   }
   // 2. Handle Firebase Auth / Firestore Errors
@@ -40,32 +40,32 @@ export function normalizeError(error) {
 
     // Map common Firebase code structures
     switch (error.code) {
-      case 'auth/invalid-email':
-      case 'auth/invalid-credential':
-      case 'auth/wrong-password':
-      case 'auth/user-not-found':
+      case "auth/invalid-email":
+      case "auth/invalid-credential":
+      case "auth/wrong-password":
+      case "auth/user-not-found":
         status = 401;
-        message = 'Invalid email or password.';
+        message = "Invalid email or password.";
         break;
-      case 'auth/email-already-in-use':
+      case "auth/email-already-in-use":
         status = 409;
-        message = 'This email address is already in use.';
+        message = "This email address is already in use.";
         break;
-      case 'auth/weak-password':
+      case "auth/weak-password":
         status = 400;
-        message = 'Password is too weak. It must be at least 6 characters.';
+        message = "Password is too weak. It must be at least 6 characters.";
         break;
-      case 'auth/requires-recent-login':
+      case "auth/requires-recent-login":
         status = 401;
-        message = 'Please re-authenticate and try again.';
+        message = "Please re-authenticate and try again.";
         break;
-      case 'permission-denied':
+      case "permission-denied":
         status = 403;
-        message = 'You do not have permission to perform this action.';
+        message = "You do not have permission to perform this action.";
         break;
-      case 'not-found':
+      case "not-found":
         status = 404;
-        message = 'The requested resource was not found.';
+        message = "The requested resource was not found.";
         break;
       default:
         status = 400;
@@ -81,4 +81,3 @@ export function normalizeError(error) {
 
 // Export the alias for the alternative spelling
 export const normaliseError = normalizeError;
-

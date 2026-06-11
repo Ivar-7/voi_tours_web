@@ -1,4 +1,4 @@
-import httpClient, { normaliseError } from '@/shared/api';
+import httpClient, { normaliseError } from "@/shared/api";
 
 /**
  * Fetches reviews.
@@ -8,7 +8,7 @@ import httpClient, { normaliseError } from '@/shared/api';
  */
 export async function getReviews(params = {}) {
   try {
-    return await httpClient.get('/reviews', { params });
+    return await httpClient.get("/reviews", { params });
   } catch (error) {
     throw normaliseError(error);
   }
@@ -22,9 +22,8 @@ export async function getReviews(params = {}) {
  */
 export async function submitReview(payload) {
   try {
-    return await httpClient.post('/reviews', payload);
+    return await httpClient.post("/reviews", payload);
   } catch (error) {
     throw normaliseError(error);
   }
 }
-

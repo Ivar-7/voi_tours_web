@@ -1,27 +1,27 @@
-import { useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Loader2, ShieldCheck, Wallet } from 'lucide-react';
-import { useBooking } from '@/features/bookings/hooks/useBooking';
-import { getAvailableProviders } from '../services/payment.service';
-import PaymentMethodSelector from '../components/PaymentMethodSelector';
-import MpesaPaymentForm from '../components/MpesaPaymentForm';
-import StripePaymentForm from '../components/StripePaymentForm';
+import { useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Loader2, ShieldCheck, Wallet } from "lucide-react";
+import { useBooking } from "@/features/bookings/hooks/useBooking";
+import { getAvailableProviders } from "../services/payment.service";
+import PaymentMethodSelector from "../components/PaymentMethodSelector";
+import MpesaPaymentForm from "../components/MpesaPaymentForm";
+import StripePaymentForm from "../components/StripePaymentForm";
 
 function formatAmount(amount, currency) {
-  if (typeof amount !== 'number') return 'N/A';
-  return new Intl.NumberFormat('en-KE', {
-    style: 'currency',
-    currency: currency || 'KES',
+  if (typeof amount !== "number") return "N/A";
+  return new Intl.NumberFormat("en-KE", {
+    style: "currency",
+    currency: currency || "KES",
     maximumFractionDigits: 0,
   }).format(amount);
 }
 
 function ProviderPanel({ provider, booking }) {
-  if (provider === 'mpesa') {
+  if (provider === "mpesa") {
     return <MpesaPaymentForm booking={booking} />;
   }
 
-  if (provider === 'stripe') {
+  if (provider === "stripe") {
     return <StripePaymentForm booking={booking} />;
   }
 
@@ -39,7 +39,8 @@ function ProviderPanel({ provider, booking }) {
         </div>
       </div>
       <div className="rounded-xl bg-zinc-50 p-4 text-sm text-zinc-600 dark:bg-zinc-900/60 dark:text-zinc-300">
-        Use your booking reference as the transfer reference and keep the receipt for verification.
+        Use your booking reference as the transfer reference and keep the
+        receipt for verification.
       </div>
     </div>
   );
@@ -54,10 +55,10 @@ export default function PaymentPage() {
     () => getAvailableProviders(booking?.currency),
     [booking?.currency],
   );
-  const [selectedProvider, setSelectedProvider] = useState('mpesa');
+  const [selectedProvider, setSelectedProvider] = useState("mpesa");
   const activeProvider = availableProviders.includes(selectedProvider)
     ? selectedProvider
-    : availableProviders[0] ?? 'bank_transfer';
+    : (availableProviders[0] ?? "bank_transfer");
 
   if (!bookingId) {
     return (
@@ -86,7 +87,7 @@ export default function PaymentPage() {
         <div className="max-w-lg rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-200">
           <p className="font-medium">Could not load booking</p>
           <p className="mt-1 opacity-90">
-            {bookingQuery.error.message || 'Please try again in a moment.'}
+            {bookingQuery.error.message || "Please try again in a moment."}
           </p>
           <button
             type="button"
@@ -131,7 +132,8 @@ export default function PaymentPage() {
                   Complete your booking payment
                 </h1>
                 <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">
-                  Choose a payment method and finish the booking balance for this reservation.
+                  Choose a payment method and finish the booking balance for
+                  this reservation.
                 </p>
               </div>
               <div className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
@@ -195,7 +197,9 @@ export default function PaymentPage() {
             </p>
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex items-center justify-between gap-4">
-                <dt className="text-zinc-500 dark:text-zinc-400">Booking status</dt>
+                <dt className="text-zinc-500 dark:text-zinc-400">
+                  Booking status
+                </dt>
                 <dd className="font-medium text-zinc-900 dark:text-zinc-50">
                   {booking.status}
                 </dd>
@@ -207,7 +211,9 @@ export default function PaymentPage() {
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <dt className="text-zinc-500 dark:text-zinc-400">Available methods</dt>
+                <dt className="text-zinc-500 dark:text-zinc-400">
+                  Available methods
+                </dt>
                 <dd className="font-medium text-zinc-900 dark:text-zinc-50">
                   {availableProviders.length}
                 </dd>

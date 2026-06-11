@@ -1,4 +1,4 @@
-import httpClient, { normaliseError } from '@/shared/api';
+import httpClient, { normaliseError } from "@/shared/api";
 
 /**
  * Initiates a payment for a booking.
@@ -10,7 +10,7 @@ import httpClient, { normaliseError } from '@/shared/api';
  */
 export async function initiatePayment(bookingId, provider, amount) {
   try {
-    return await httpClient.post('/payments', { bookingId, provider, amount });
+    return await httpClient.post("/payments", { bookingId, provider, amount });
   } catch (error) {
     throw normaliseError(error);
   }
@@ -38,9 +38,10 @@ export async function getPaymentStatus(paymentId) {
  */
 export async function confirmMpesaPayment(checkoutRequestId) {
   try {
-    return await httpClient.post('/payments/mpesa/confirm', { checkoutRequestId });
+    return await httpClient.post("/payments/mpesa/confirm", {
+      checkoutRequestId,
+    });
   } catch (error) {
     throw normaliseError(error);
   }
 }
-

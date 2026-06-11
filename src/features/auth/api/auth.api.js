@@ -4,12 +4,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
-} from 'firebase/auth';
+} from "firebase/auth";
 
-import httpClient, { normaliseError } from '@/shared/api';
-import { useAuthStore } from '@/shared/store';
-import { auth } from '@/config/firebase';
-
+import httpClient, { normaliseError } from "@/shared/api";
+import { useAuthStore } from "@/shared/store";
+import { auth } from "@/config/firebase";
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 
@@ -66,7 +65,7 @@ export async function registerWithEmail(email, password, profile = {}) {
 
     // Create the backend record. The interceptor in httpClient will attach
     // the Firebase ID token automatically.
-    const backendProfile = await httpClient.post('/users', {
+    const backendProfile = await httpClient.post("/users", {
       uid: firebaseUser.uid,
       email: firebaseUser.email,
       ...profile,
@@ -129,5 +128,5 @@ export async function forgotPassword(email) {
  * @returns {Promise<object>}
  */
 async function fetchMe() {
-  return httpClient.get('/me');
+  return httpClient.get("/me");
 }

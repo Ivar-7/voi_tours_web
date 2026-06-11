@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { initiatePayment } from '../api/payments.api';
+import { useMutation } from "@tanstack/react-query";
+import { initiatePayment } from "../api/payments.api";
 
 function pickClientSecret(data) {
   return (
@@ -16,7 +16,7 @@ function pickClientSecret(data) {
 export function useStripePayment() {
   const mutation = useMutation({
     mutationFn: async ({ bookingId, amount, currency }) => {
-      return initiatePayment(bookingId, 'stripe', amount, currency);
+      return initiatePayment(bookingId, "stripe", amount, currency);
     },
   });
 

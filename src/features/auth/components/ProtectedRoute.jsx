@@ -1,6 +1,6 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import LoadingState from '@shared/components/feedback/LoadingState';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "@features/auth/hooks/useAuth";
+import LoadingState from "@shared/components/feedback/LoadingState";
 
 export default function ProtectedRoute({ children }) {
   const location = useLocation();

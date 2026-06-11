@@ -10,23 +10,24 @@ export function buildBookingPayload(type, formData, user) {
   const payload = {
     type,
     total_amount: formData.total_amount || 0,
-    currency: formData.currency || (user?.tier === 'international' ? 'USD' : 'KES'),
+    currency:
+      formData.currency || (user?.tier === "international" ? "USD" : "KES"),
   };
 
   // Nest specific fields based on service type
   switch (type) {
-    case 'safari':
+    case "safari":
       payload.safari = {
         package_id: formData.package_id,
         travel_date: formData.travel_date,
         party_size: Number(formData.party_size),
-        tier_applied: user?.tier || 'citizen',
-        season_applied: formData.season_applied || 'regular',
+        tier_applied: user?.tier || "citizen",
+        season_applied: formData.season_applied || "regular",
       };
       break;
 
-    case 'sgr_transfer':
-    case 'flight':
+    case "sgr_transfer":
+    case "flight":
       payload.transfer = {
         pickup_location: formData.pickup_location,
         dropoff_location: formData.dropoff_location,
@@ -36,18 +37,20 @@ export function buildBookingPayload(type, formData, user) {
       };
       break;
 
-    case 'delivery':
+    case "delivery":
       payload.delivery = {
         sender_address: formData.sender_address,
         recipient_name: formData.recipient_name,
         recipient_phone: formData.recipient_phone,
         delivery_address: formData.delivery_address,
-        parcel_weight_kg: formData.parcel_weight_kg ? Number(formData.parcel_weight_kg) : null,
+        parcel_weight_kg: formData.parcel_weight_kg
+          ? Number(formData.parcel_weight_kg)
+          : null,
         delivery_instructions: formData.delivery_instructions || null,
       };
       break;
 
-    case 'hotel':
+    case "hotel":
       payload.hotel = {
         hotel_name: formData.hotel_name,
         room_category: formData.room_category,
@@ -57,7 +60,7 @@ export function buildBookingPayload(type, formData, user) {
       };
       break;
 
-    case 'event':
+    case "event":
       payload.event = {
         event_name: formData.event_name,
         event_type: formData.event_type,
@@ -73,4 +76,3 @@ export function buildBookingPayload(type, formData, user) {
 
   return payload;
 }
-

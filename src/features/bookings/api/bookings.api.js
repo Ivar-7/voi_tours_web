@@ -1,4 +1,4 @@
-import httpClient, { normaliseError } from '@/shared/api';
+import httpClient, { normaliseError } from "@/shared/api";
 
 /**
  * Creates a new booking.
@@ -8,7 +8,7 @@ import httpClient, { normaliseError } from '@/shared/api';
  */
 export async function createBooking(payload) {
   try {
-    return await httpClient.post('/bookings', payload);
+    return await httpClient.post("/bookings", payload);
   } catch (error) {
     throw normaliseError(error);
   }
@@ -22,7 +22,7 @@ export async function createBooking(payload) {
  */
 export async function getMyBookings(params = {}) {
   try {
-    return await httpClient.get('/bookings/me', { params });
+    return await httpClient.get("/bookings/me", { params });
   } catch (error) {
     throw normaliseError(error);
   }
@@ -41,4 +41,3 @@ export async function getBookingById(id) {
     throw normaliseError(error);
   }
 }
-

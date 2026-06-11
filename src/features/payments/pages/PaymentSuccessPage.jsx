@@ -1,14 +1,16 @@
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, BadgeInfo } from 'lucide-react';
-import { useBooking } from '@/features/bookings/hooks/useBooking';
-import { usePayment } from '../hooks/usePayment';
-import PaymentReceipt from '../components/PaymentReceipt';
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { CheckCircle2, ArrowRight, BadgeInfo } from "lucide-react";
+import { useBooking } from "@/features/bookings/hooks/useBooking";
+import { usePayment } from "../hooks/usePayment";
+import PaymentReceipt from "../components/PaymentReceipt";
 
 export default function PaymentSuccessPage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const bookingId = searchParams.get('bookingId') || location.state?.bookingId || '';
-  const paymentId = searchParams.get('paymentId') || location.state?.paymentId || '';
+  const bookingId =
+    searchParams.get("bookingId") || location.state?.bookingId || "";
+  const paymentId =
+    searchParams.get("paymentId") || location.state?.paymentId || "";
 
   const bookingQuery = useBooking(bookingId);
   const paymentQuery = usePayment(paymentId);
@@ -27,7 +29,8 @@ export default function PaymentSuccessPage() {
                 Your payment has been confirmed.
               </h1>
               <p className="text-sm text-emerald-800/90 dark:text-emerald-200/80">
-                We have recorded the payment and your booking is ready for the next step.
+                We have recorded the payment and your booking is ready for the
+                next step.
               </p>
             </div>
           </div>
@@ -39,11 +42,18 @@ export default function PaymentSuccessPage() {
           </div>
         ) : null}
 
-        <PaymentReceipt payment={paymentQuery.data} booking={bookingQuery.data} />
+        <PaymentReceipt
+          payment={paymentQuery.data}
+          booking={bookingQuery.data}
+        />
 
         <div className="flex flex-wrap gap-3">
           <Link
-            to={bookingId ? `/dashboard/bookings/${bookingId}` : '/dashboard/bookings'}
+            to={
+              bookingId
+                ? `/dashboard/bookings/${bookingId}`
+                : "/dashboard/bookings"
+            }
             className="inline-flex items-center gap-2 rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             View booking

@@ -1,5 +1,5 @@
 // TODO: Zod schemas for all booking form types
-import { z } from 'zod';
+import { z } from "zod";
 
 export const safariBookingSchema = z.object({
   package_id: z.string().uuid(),
@@ -24,16 +24,18 @@ export const deliveryBookingSchema = z.object({
   delivery_instructions: z.string().optional(),
 });
 
-export const hotelBookingSchema = z.object({
-  hotel_name: z.string().min(2),
-  room_category: z.string().min(2),
-  check_in: z.string().date(),
-  check_out: z.string().date(),
-  number_of_rooms: z.number().int().min(1),
-}).refine((d) => d.check_out > d.check_in, {
-  path: ['check_out'],
-  message: 'Check-out must be after check-in',
-});
+export const hotelBookingSchema = z
+  .object({
+    hotel_name: z.string().min(2),
+    room_category: z.string().min(2),
+    check_in: z.string().date(),
+    check_out: z.string().date(),
+    number_of_rooms: z.number().int().min(1),
+  })
+  .refine((d) => d.check_out > d.check_in, {
+    path: ["check_out"],
+    message: "Check-out must be after check-in",
+  });
 
 export const eventBookingSchema = z.object({
   event_name: z.string().min(2),

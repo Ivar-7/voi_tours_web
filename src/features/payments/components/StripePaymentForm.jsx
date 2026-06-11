@@ -1,14 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Loader2, CreditCard, ShieldCheck } from 'lucide-react';
-import { getStripeInstance } from '../services/stripe.service';
-import { useStripePayment } from '../hooks/useStripePayment';
-import PaymentStatusPoller from './PaymentStatusPoller';
+import { useEffect, useMemo, useState } from "react";
+import {
+  Elements,
+  CardElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { Loader2, CreditCard, ShieldCheck } from "lucide-react";
+import { getStripeInstance } from "../services/stripe.service";
+import { useStripePayment } from "../hooks/useStripePayment";
+import PaymentStatusPoller from "./PaymentStatusPoller";
 
 function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
   const stripe = useStripe();
   const elements = useElements();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event) {
@@ -16,7 +21,7 @@ function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
     if (!stripe || !elements) return;
 
     setIsSubmitting(true);
-    setErrorMessage('');
+    setErrorMessage("");
 
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
@@ -31,14 +36,19 @@ function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
     setIsSubmitting(false);
 
     if (result.error) {
-      setErrorMessage(result.error.message || 'Card payment could not be completed.');
+      setErrorMessage(
+        result.error.message || "Card payment could not be completed.",
+      );
       return;
     }
 
-    if (result.paymentIntent?.status === 'succeeded' || result.paymentIntent?.status === 'processing') {
+    if (
+      result.paymentIntent?.status === "succeeded" ||
+      result.paymentIntent?.status === "processing"
+    ) {
       onPaid(result.paymentIntent.id || paymentId);
     } else {
-      setErrorMessage('Card payment did not complete.');
+      setErrorMessage("Card payment did not complete.");
     }
   }
 
@@ -49,14 +59,14 @@ function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
           options={{
             style: {
               base: {
-                color: '#0f172a',
-                fontSize: '16px',
-                '::placeholder': {
-                  color: '#94a3b8',
+                color: "#0f172a",
+                fontSize: "16px",
+                "::placeholder": {
+                  color: "#94a3b8",
                 },
               },
               invalid: {
-                color: '#ef4444',
+                color: "#ef4444",
               },
             },
           }}
@@ -72,7 +82,11 @@ function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
         disabled={!stripe || isSubmitting}
         className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
       >
-        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+        {isSubmitting ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <CreditCard className="h-4 w-4" />
+        )}
         Pay with card
       </button>
     </form>
@@ -80,8 +94,9 @@ function CardCheckoutForm({ clientSecret, booking, paymentId, onPaid }) {
 }
 
 export default function StripePaymentForm({ booking }) {
-  const { mutateAsync, clientSecret, paymentId, isLoading, error, data } = useStripePayment();
-  const [resolvedPaymentId, setResolvedPaymentId] = useState('');
+  const { mutateAsync, clientSecret, paymentId, isLoading, error, data } =
+    useStripePayment();
+  const [resolvedPaymentId, setResolvedPaymentId] = useState("");
   const [stripeInstance, setStripeInstance] = useState(undefined);
 
   const finalPaymentId = resolvedPaymentId || paymentId;
@@ -98,7 +113,10 @@ export default function StripePaymentForm({ booking }) {
     };
   }, []);
 
-  const canSubmit = useMemo(() => Boolean(booking?.id && booking?.total_amount), [booking]);
+  const canSubmit = useMemo(
+    () => Boolean(booking?.id && booking?.total_amount),
+    [booking],
+  );
 
   async function preparePayment() {
     const response = await mutateAsync({
@@ -108,7 +126,11 @@ export default function StripePaymentForm({ booking }) {
     });
 
     setResolvedPaymentId(
-      response?.id ?? response?.payment?.id ?? response?.paymentId ?? response?.payment_id ?? '',
+      response?.id ??
+        response?.payment?.id ??
+        response?.paymentId ??
+        response?.payment_id ??
+        "",
     );
   }
 
@@ -126,7 +148,10 @@ export default function StripePaymentForm({ booking }) {
             </div>
           </div>
         </div>
-        <PaymentStatusPoller paymentId={finalPaymentId} bookingId={booking.id} />
+        <PaymentStatusPoller
+          paymentId={finalPaymentId}
+          bookingId={booking.id}
+        />
       </div>
     );
   }
@@ -151,11 +176,12 @@ export default function StripePaymentForm({ booking }) {
     return (
       <div className="space-y-4">
         <p className="text-sm text-zinc-600 dark:text-zinc-300">
-          We’ll create a secure card payment session before you enter card details.
+          We’ll create a secure card payment session before you enter card
+          details.
         </p>
         {error ? (
           <p className="text-sm text-red-600 dark:text-red-400">
-            {error.message || 'Unable to prepare card payment.'}
+            {error.message || "Unable to prepare card payment."}
           </p>
         ) : null}
         <button
@@ -164,7 +190,11 @@ export default function StripePaymentForm({ booking }) {
           disabled={!canSubmit || isLoading}
           className="inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <CreditCard className="h-4 w-4" />
+          )}
           Prepare card payment
         </button>
         {data?.status ? (

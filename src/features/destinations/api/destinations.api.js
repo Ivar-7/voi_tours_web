@@ -30,14 +30,14 @@ import {
   limit as firestoreLimit,
   writeBatch,
   Timestamp,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
-import { db, auth } from '@/config/firebase';
-import { normaliseError } from '@/shared/api';
+import { db, auth } from "@/config/firebase";
+import { normaliseError } from "@/shared/api";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const COLLECTION = 'destinations';
+const COLLECTION = "destinations";
 
 // ─── Internal helpers ─────────────────────────────────────────────────────────
 
@@ -73,15 +73,17 @@ function snapToDestination(snap) {
 
   return {
     ...data,
-    id:        snap.id,
+    id: snap.id,
     // Convert Firestore Timestamps → ISO strings so components never need
     // to import Timestamp or call .toDate() themselves.
-    createdAt: data.createdAt instanceof Timestamp
-      ? data.createdAt.toDate().toISOString()
-      : (data.createdAt ?? null),
-    updatedAt: data.updatedAt instanceof Timestamp
-      ? data.updatedAt.toDate().toISOString()
-      : (data.updatedAt ?? null),
+    createdAt:
+      data.createdAt instanceof Timestamp
+        ? data.createdAt.toDate().toISOString()
+        : (data.createdAt ?? null),
+    updatedAt:
+      data.updatedAt instanceof Timestamp
+        ? data.updatedAt.toDate().toISOString()
+        : (data.updatedAt ?? null),
   };
 }
 
@@ -122,16 +124,18 @@ export async function getDestinations(params = {}) {
       featured,
       tag,
       limit,
-      orderBy: orderField = 'name',
-      order = 'asc',
+      orderBy: orderField = "name",
+      order = "asc",
     } = params;
 
     const constraints = [];
 
     // ── Filter clauses ─────────────────────────────────────────────────────
-    if (region !== undefined)   constraints.push(where('region',   '==',             region));
-    if (featured !== undefined) constraints.push(where('featured', '==',             featured));
-    if (tag !== undefined)      constraints.push(where('tags',     'array-contains', tag));
+    if (region !== undefined) constraints.push(where("region", "==", region));
+    if (featured !== undefined)
+      constraints.push(where("featured", "==", featured));
+    if (tag !== undefined)
+      constraints.push(where("tags", "array-contains", tag));
 
     // ── Sort ───────────────────────────────────────────────────────────────
     // Firestore requires the orderBy field to match any inequality filter
@@ -165,12 +169,16 @@ export async function getDestinations(params = {}) {
  */
 export async function getDestinationBySlug(slug) {
   try {
-    const q = query(destinationsRef(), where('slug', '==', slug), firestoreLimit(1));
+    const q = query(
+      destinationsRef(),
+      where("slug", "==", slug),
+      firestoreLimit(1),
+    );
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
       throw Object.assign(new Error(`Destination not found: "${slug}"`), {
-        code:   'not-found',
+        code: "not-found",
         status: 404,
       });
     }
@@ -197,7 +205,7 @@ export async function getDestinationById(id) {
 
     if (!snap.exists()) {
       throw Object.assign(new Error(`Destination not found: id="${id}"`), {
-        code:   'not-found',
+        code: "not-found",
         status: 404,
       });
     }
@@ -279,7 +287,11 @@ export async function createDestination(payload) {
 export async function updateDestination(id, payload) {
   try {
     // Guard: strip immutable fields that must never be overwritten.
-    const { id: _id, slug: _slug, createdAt: _ca, createdBy: _cb, ...safePayload } = payload;
+    const safePayload = { ...payload };
+    delete safePayload.id;
+    delete safePayload.slug;
+    delete safePayload.createdAt;
+    delete safePayload.createdBy;
 
     const uid = currentUid();
 
@@ -389,7 +401,11 @@ export async function bulkDeleteDestinations(ids) {
  */
 export async function isSlugAvailable(slug, excludeId) {
   try {
-    const q = query(destinationsRef(), where('slug', '==', slug), firestoreLimit(1));
+    const q = query(
+      destinationsRef(),
+      where("slug", "==", slug),
+      firestoreLimit(1),
+    );
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) return true;
@@ -421,9 +437,9 @@ export async function isSlugAvailable(slug, excludeId) {
  */
 export async function seedDestinations(destinations) {
   try {
-    const uid  = currentUid();
-    const now  = serverTimestamp();
-    const ids  = [];
+    const uid = currentUid();
+    const now = serverTimestamp();
+    const ids = [];
 
     // Firestore batches support writes; addDoc isn't batchable so we use
     // setDoc with an auto-ID pattern via doc() with no path argument.

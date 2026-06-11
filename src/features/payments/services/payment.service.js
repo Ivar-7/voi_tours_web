@@ -5,13 +5,13 @@
  * @returns {('mpesa'|'stripe'|'bank_transfer')[]}
  */
 export function getAvailableProviders(currency) {
-  if (currency === 'KES') {
-    return ['mpesa', 'stripe', 'bank_transfer'];
+  if (currency === "KES") {
+    return ["mpesa", "stripe", "bank_transfer"];
   }
-  if (currency === 'USD') {
-    return ['stripe', 'bank_transfer'];
+  if (currency === "USD") {
+    return ["stripe", "bank_transfer"];
   }
-  return ['bank_transfer'];
+  return ["bank_transfer"];
 }
 
 /**
@@ -22,13 +22,12 @@ export function getAvailableProviders(currency) {
  * @returns {string}
  */
 export function formatProviderTxId(provider, raw) {
-  if (!raw) return 'N/A';
-  if (provider === 'mpesa') {
+  if (!raw) return "N/A";
+  if (provider === "mpesa") {
     return `M-Pesa Ref: ${raw}`;
   }
-  if (provider === 'stripe') {
+  if (provider === "stripe") {
     return `Stripe Intent: ${raw.substring(0, 12)}...`;
   }
   return raw;
 }
-

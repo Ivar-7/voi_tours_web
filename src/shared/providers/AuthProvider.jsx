@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/config/firebase';
-import { useAuthStore } from '@/shared/store';
-import httpClient from '@/shared/api';
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/config/firebase";
+import { useAuthStore } from "@/shared/store";
+import httpClient from "@/shared/api";
 
 export default function AuthProvider({ children }) {
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -21,19 +21,19 @@ export default function AuthProvider({ children }) {
             setToken(token);
 
             try {
-              const profile = await httpClient.get('/me');
+              const profile = await httpClient.get("/me");
               setAuth({ firebaseUser, profile, token });
             } catch (error) {
               // Backend may be down — still mark auth as resolved with
               // the Firebase user so the UI can function offline.
-              console.warn('Failed to fetch backend profile:', error);
+              console.warn("Failed to fetch backend profile:", error);
               setAuth({ firebaseUser, profile: null, token });
             }
           } else {
             clearAuth();
           }
         } catch (error) {
-          console.error('Auth state change error:', error);
+          console.error("Auth state change error:", error);
           clearAuth();
         } finally {
           setLoading(false);
@@ -41,7 +41,7 @@ export default function AuthProvider({ children }) {
       });
     } catch (error) {
       // Firebase itself failed to initialize (bad config, network block, etc.)
-      console.error('Firebase onAuthStateChanged setup failed:', error);
+      console.error("Firebase onAuthStateChanged setup failed:", error);
       clearAuth();
       setLoading(false);
     }

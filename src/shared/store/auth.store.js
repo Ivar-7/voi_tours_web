@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
   persist(
@@ -28,7 +28,7 @@ export const useAuthStore = create(
         }),
     }),
     {
-      name: 'voi-tours-auth',
+      name: "voi-tours-auth",
       // Only serialize JSON-safe data; avoid firebaseUser object methods.
       partialize: (state) => ({
         user: state.user,
@@ -37,4 +37,3 @@ export const useAuthStore = create(
     },
   ),
 );
-

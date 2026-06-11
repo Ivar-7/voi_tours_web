@@ -1,6 +1,6 @@
-import { Link, Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import LoadingState from '@shared/components/feedback/LoadingState';
+import { Link, Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "@features/auth/hooks/useAuth";
+import LoadingState from "@shared/components/feedback/LoadingState";
 
 export default function AuthLayout() {
   const { isAuthenticated, isLoading } = useAuth();

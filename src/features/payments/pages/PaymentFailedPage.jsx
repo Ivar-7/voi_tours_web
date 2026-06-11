@@ -1,11 +1,13 @@
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { AlertTriangle, ArrowRight, LifeBuoy } from 'lucide-react';
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { AlertTriangle, ArrowRight, LifeBuoy } from "lucide-react";
 
 export default function PaymentFailedPage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const bookingId = searchParams.get('bookingId') || location.state?.bookingId || '';
-  const paymentId = searchParams.get('paymentId') || location.state?.paymentId || '';
+  const bookingId =
+    searchParams.get("bookingId") || location.state?.bookingId || "";
+  const paymentId =
+    searchParams.get("paymentId") || location.state?.paymentId || "";
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-4xl items-center px-4 py-10">
@@ -21,7 +23,8 @@ export default function PaymentFailedPage() {
                 We could not confirm the payment.
               </h1>
               <p className="text-sm text-red-800/90 dark:text-red-200/80">
-                You can retry the payment or contact support if the issue keeps repeating.
+                You can retry the payment or contact support if the issue keeps
+                repeating.
               </p>
             </div>
           </div>
@@ -29,13 +32,20 @@ export default function PaymentFailedPage() {
 
         {paymentId ? (
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
-            Payment reference: <span className="font-medium text-zinc-900 dark:text-zinc-50">{paymentId}</span>
+            Payment reference:{" "}
+            <span className="font-medium text-zinc-900 dark:text-zinc-50">
+              {paymentId}
+            </span>
           </div>
         ) : null}
 
         <div className="flex flex-wrap gap-3">
           <Link
-            to={bookingId ? `/dashboard/bookings/${bookingId}/pay` : '/dashboard/bookings'}
+            to={
+              bookingId
+                ? `/dashboard/bookings/${bookingId}/pay`
+                : "/dashboard/bookings"
+            }
             className="inline-flex items-center gap-2 rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Retry payment

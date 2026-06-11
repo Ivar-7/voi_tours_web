@@ -1,4 +1,4 @@
-import httpClient, { normaliseError } from '@/shared/api';
+import httpClient, { normaliseError } from "@/shared/api";
 
 /**
  * Fetches the currently authenticated user's backend profile.
@@ -7,7 +7,7 @@ import httpClient, { normaliseError } from '@/shared/api';
  */
 export async function getMyProfile() {
   try {
-    return await httpClient.get('/users/me');
+    return await httpClient.get("/users/me");
   } catch (error) {
     throw normaliseError(error);
   }
@@ -21,7 +21,7 @@ export async function getMyProfile() {
  */
 export async function updateMyProfile(payload) {
   try {
-    return await httpClient.patch('/users/me', payload);
+    return await httpClient.patch("/users/me", payload);
   } catch (error) {
     throw normaliseError(error);
   }
@@ -35,9 +35,8 @@ export async function updateMyProfile(payload) {
  */
 export async function changePassword(payload) {
   try {
-    return await httpClient.post('/users/me/change-password', payload);
+    return await httpClient.post("/users/me/change-password", payload);
   } catch (error) {
     throw normaliseError(error);
   }
 }
-

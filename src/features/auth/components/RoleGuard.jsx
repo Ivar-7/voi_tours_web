@@ -1,6 +1,6 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import LoadingState from '@shared/components/feedback/LoadingState';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@features/auth/hooks/useAuth";
+import LoadingState from "@shared/components/feedback/LoadingState";
 
 export default function RoleGuard({ roles, children }) {
   const { user, isAuthenticated, isLoading } = useAuth();

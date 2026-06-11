@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 /**
  * Derives package price for the given tier and season.
@@ -11,7 +11,7 @@ import { useMemo } from 'react';
 export function usePackagePricing(pricing, tier, season) {
   return useMemo(() => {
     if (!pricing || !tier || !season) {
-      return { price: null, currency: 'KES' };
+      return { price: null, currency: "KES" };
     }
 
     const row = pricing.find(
@@ -22,8 +22,7 @@ export function usePackagePricing(pricing, tier, season) {
 
     return {
       price: row ? row.price_per_person : null,
-      currency: row ? row.currency : 'KES',
+      currency: row ? row.currency : "KES",
     };
   }, [pricing, tier, season]);
 }
-

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { loginWithEmail, forgotPassword } from '../api/auth.api.js';
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { loginWithEmail, forgotPassword } from "../api/auth.api.js";
 
 // ─── Animation variants ───────────────────────────────────────────────────────
 
@@ -23,7 +23,16 @@ const shake = {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function InputField({ id, label, type = 'text', value, onChange, error, autoComplete, placeholder }) {
+function InputField({
+  id,
+  label,
+  type = "text",
+  value,
+  onChange,
+  error,
+  autoComplete,
+  placeholder,
+}) {
   return (
     <div className="flex flex-col gap-1.5">
       <label
@@ -40,20 +49,20 @@ function InputField({ id, label, type = 'text', value, onChange, error, autoComp
         autoComplete={autoComplete}
         placeholder={placeholder}
         className={[
-          'w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400',
-          'outline-none transition-all duration-200',
-          'dark:text-zinc-100 dark:placeholder:text-zinc-600',
+          "w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400",
+          "outline-none transition-all duration-200",
+          "dark:text-zinc-100 dark:placeholder:text-zinc-600",
           error
-            ? 'border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30'
-            : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40',
-        ].join(' ')}
+            ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
+            : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40",
+        ].join(" ")}
       />
       <AnimatePresence mode="wait">
         {error && (
           <motion.p
             key="err"
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="text-xs text-red-500 dark:text-red-400"
           >
@@ -66,24 +75,24 @@ function InputField({ id, label, type = 'text', value, onChange, error, autoComp
 }
 
 function ForgotPasswordPanel({ onClose }) {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
-  const [errorMsg, setErrorMsg] = useState('');
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!email) {
-      setErrorMsg('Please enter your email.');
+      setErrorMsg("Please enter your email.");
       return;
     }
-    setStatus('loading');
-    setErrorMsg('');
+    setStatus("loading");
+    setErrorMsg("");
     try {
       await forgotPassword(email);
-      setStatus('success');
+      setStatus("success");
     } catch (err) {
-      setErrorMsg(err.message ?? 'Something went wrong.');
-      setStatus('error');
+      setErrorMsg(err.message ?? "Something went wrong.");
+      setStatus("error");
     }
   }
 
@@ -101,8 +110,18 @@ function ForgotPasswordPanel({ onClose }) {
           onClick={onClose}
           className="mb-4 flex items-center gap-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
         >
-          <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M10 12L6 8l4-4" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            className="h-3.5 w-3.5"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path
+              d="M10 12L6 8l4-4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
           Back to sign in
         </button>
@@ -114,43 +133,59 @@ function ForgotPasswordPanel({ onClose }) {
         </p>
       </div>
 
-      {status === 'success' ? (
+      {status === "success" ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-center dark:border-emerald-800 dark:bg-emerald-950/40">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
-            <svg className="h-5 w-5 text-emerald-600 dark:text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clipRule="evenodd" />
+            <svg
+              className="h-5 w-5 text-emerald-600 dark:text-emerald-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
             Check your inbox
           </p>
           <p className="text-xs text-emerald-600 dark:text-emerald-400">
-            If an account exists for <strong>{email}</strong>, a reset link is on its way.
+            If an account exists for <strong>{email}</strong>, a reset link is
+            on its way.
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          noValidate
+        >
           <InputField
             id="reset-email"
             label="Email"
             type="email"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setErrorMsg(''); }}
-            error={status === 'error' ? errorMsg : ''}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMsg("");
+            }}
+            error={status === "error" ? errorMsg : ""}
             autoComplete="email"
             placeholder="you@example.com"
           />
           <button
             type="submit"
-            disabled={status === 'loading'}
+            disabled={status === "loading"}
             className="relative w-full overflow-hidden rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
-            {status === 'loading' ? (
+            {status === "loading" ? (
               <span className="flex items-center justify-center gap-2">
                 <Spinner /> Sending…
               </span>
             ) : (
-              'Send reset link'
+              "Send reset link"
             )}
           </button>
         </form>
@@ -159,8 +194,8 @@ function ForgotPasswordPanel({ onClose }) {
   );
 }
 
-function Spinner({ size = 'sm' }) {
-  const cls = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+function Spinner({ size = "sm" }) {
+  const cls = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   return (
     <svg
       className={`${cls} animate-spin`}
@@ -169,7 +204,10 @@ function Spinner({ size = 'sm' }) {
       stroke="currentColor"
       strokeWidth="2.5"
     >
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round" />
+      <path
+        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -178,7 +216,10 @@ function Spinner({ size = 'sm' }) {
 
 function Background() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden
+    >
       {/* Top-right orb */}
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-violet-100/60 blur-3xl dark:bg-violet-950/40" />
       {/* Bottom-left orb */}
@@ -188,8 +229,8 @@ function Background() {
         className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]"
         style={{
           backgroundImage:
-            'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
+            "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
         }}
       />
     </div>
@@ -201,24 +242,25 @@ function Background() {
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname ?? '/dashboard';
+  const from = location.state?.from?.pathname ?? "/dashboard";
 
-  const [view, setView] = useState('login'); // 'login' | 'forgot'
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [view, setView] = useState("login"); // 'login' | 'forgot'
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | loading | error
-  const [serverError, setServerError] = useState('');
+  const [status, setStatus] = useState("idle"); // idle | loading | error
+  const [serverError, setServerError] = useState("");
 
   // ── Validation ──────────────────────────────────────────────────────────────
 
   function validate() {
     const errs = {};
-    if (!email.trim()) errs.email = 'Email is required.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Enter a valid email.';
-    if (!password) errs.password = 'Password is required.';
-    else if (password.length < 6) errs.password = 'Minimum 6 characters.';
+    if (!email.trim()) errs.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      errs.email = "Enter a valid email.";
+    if (!password) errs.password = "Password is required.";
+    else if (password.length < 6) errs.password = "Minimum 6 characters.";
     return errs;
   }
 
@@ -226,20 +268,20 @@ export default function LoginPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setServerError('');
+    setServerError("");
     const errs = validate();
     if (Object.keys(errs).length) {
       setErrors(errs);
       return;
     }
     setErrors({});
-    setStatus('loading');
+    setStatus("loading");
     try {
       await loginWithEmail(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setStatus('error');
-      setServerError(err.message ?? 'Sign in failed. Please try again.');
+      setStatus("error");
+      setServerError(err.message ?? "Sign in failed. Please try again.");
     }
   }
 
@@ -256,9 +298,17 @@ export default function LoginPage() {
         className="relative z-10 w-full max-w-md"
       >
         {/* Logo / wordmark */}
-        <motion.div custom={0} variants={fadeUp} className="mb-8 flex items-center gap-2.5">
+        <motion.div
+          custom={0}
+          variants={fadeUp}
+          className="mb-8 flex items-center gap-2.5"
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100">
-            <svg className="h-4 w-4 text-white dark:text-zinc-900" viewBox="0 0 16 16" fill="currentColor">
+            <svg
+              className="h-4 w-4 text-white dark:text-zinc-900"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+            >
               <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zM8 7a1 1 0 100 2 1 1 0 000-2z" />
             </svg>
           </div>
@@ -274,8 +324,11 @@ export default function LoginPage() {
           className="rounded-2xl border border-zinc-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-md dark:border-zinc-800/70 dark:bg-zinc-900/80"
         >
           <AnimatePresence mode="wait">
-            {view === 'forgot' ? (
-              <ForgotPasswordPanel key="forgot" onClose={() => setView('login')} />
+            {view === "forgot" ? (
+              <ForgotPasswordPanel
+                key="forgot"
+                onClose={() => setView("login")}
+              />
             ) : (
               <motion.div
                 key="login"
@@ -297,17 +350,27 @@ export default function LoginPage() {
 
                 {/* Server error banner */}
                 <AnimatePresence>
-                  {status === 'error' && serverError && (
+                  {status === "error" && serverError && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/60 dark:bg-red-950/40"
                     >
-                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 012 0v3a1 1 0 01-2 0V9zm1 7a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 16z" clipRule="evenodd" />
+                      <svg
+                        className="mt-0.5 h-4 w-4 shrink-0 text-red-500"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 012 0v3a1 1 0 01-2 0V9zm1 7a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 16z"
+                          clipRule="evenodd"
+                        />
                       </svg>
-                      <p className="text-sm text-red-700 dark:text-red-300">{serverError}</p>
+                      <p className="text-sm text-red-700 dark:text-red-300">
+                        {serverError}
+                      </p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -316,8 +379,8 @@ export default function LoginPage() {
                 <motion.form
                   onSubmit={handleSubmit}
                   noValidate
-                  variants={status === 'error' ? shake : {}}
-                  animate={status === 'error' ? 'shake' : undefined}
+                  variants={status === "error" ? shake : {}}
+                  animate={status === "error" ? "shake" : undefined}
                   className="flex flex-col gap-4"
                 >
                   <InputField
@@ -325,7 +388,11 @@ export default function LoginPage() {
                     label="Email"
                     type="email"
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: '' })); setStatus('idle'); }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setErrors((p) => ({ ...p, email: "" }));
+                      setStatus("idle");
+                    }}
                     error={errors.email}
                     autoComplete="email"
                     placeholder="you@example.com"
@@ -341,7 +408,7 @@ export default function LoginPage() {
                       </label>
                       <button
                         type="button"
-                        onClick={() => setView('forgot')}
+                        onClick={() => setView("forgot")}
                         className="text-xs text-zinc-400 underline-offset-2 transition-colors hover:text-zinc-700 hover:underline dark:hover:text-zinc-200"
                       >
                         Forgot password?
@@ -350,34 +417,66 @@ export default function LoginPage() {
                     <div className="relative">
                       <input
                         id="password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: '' })); setStatus('idle'); }}
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          setErrors((p) => ({ ...p, password: "" }));
+                          setStatus("idle");
+                        }}
                         autoComplete="current-password"
                         placeholder="••••••••"
                         className={[
-                          'w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-zinc-900 placeholder:text-zinc-400',
-                          'outline-none transition-all duration-200',
-                          'dark:text-zinc-100 dark:placeholder:text-zinc-600',
+                          "w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-zinc-900 placeholder:text-zinc-400",
+                          "outline-none transition-all duration-200",
+                          "dark:text-zinc-100 dark:placeholder:text-zinc-600",
                           errors.password
-                            ? 'border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600'
-                            : 'border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40',
-                        ].join(' ')}
+                            ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600"
+                            : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40",
+                        ].join(" ")}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
                       >
                         {showPassword ? (
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                            <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22" strokeLinecap="round" strokeLinejoin="round" />
+                          <svg
+                            className="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                          >
+                            <path
+                              d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M1 1l22 22"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         ) : (
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                            <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" strokeLinecap="round" strokeLinejoin="round" />
-                            <circle cx="12" cy="12" r="3" strokeLinecap="round" strokeLinejoin="round" />
+                          <svg
+                            className="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                          >
+                            <path
+                              d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         )}
                       </button>
@@ -387,7 +486,7 @@ export default function LoginPage() {
                         <motion.p
                           key="pwd-err"
                           initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
+                          animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
                           className="text-xs text-red-500 dark:text-red-400"
                         >
@@ -399,15 +498,15 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    disabled={status === 'loading'}
+                    disabled={status === "loading"}
                     className="mt-1 w-full overflow-hidden rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
                   >
-                    {status === 'loading' ? (
+                    {status === "loading" ? (
                       <span className="flex items-center justify-center gap-2">
                         <Spinner /> Signing in…
                       </span>
                     ) : (
-                      'Sign in'
+                      "Sign in"
                     )}
                   </button>
                 </motion.form>
@@ -421,7 +520,7 @@ export default function LoginPage() {
 
                 {/* Register CTA */}
                 <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-                  Don't have an account?{' '}
+                  Don't have an account?{" "}
                   <Link
                     to="/register"
                     className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
@@ -440,12 +539,18 @@ export default function LoginPage() {
           variants={fadeUp}
           className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-600"
         >
-          By signing in you agree to our{' '}
-          <Link to="/terms" className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400">
+          By signing in you agree to our{" "}
+          <Link
+            to="/terms"
+            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
+          >
             Terms
-          </Link>{' '}
-          and{' '}
-          <Link to="/privacy" className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400">
+          </Link>{" "}
+          and{" "}
+          <Link
+            to="/privacy"
+            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
+          >
             Privacy Policy
           </Link>
           .

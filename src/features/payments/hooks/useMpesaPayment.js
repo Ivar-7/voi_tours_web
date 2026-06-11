@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import httpClient, { normaliseError } from '@/shared/api';
+import { useMutation } from "@tanstack/react-query";
+import httpClient, { normaliseError } from "@/shared/api";
 
 function pickPaymentId(data) {
   return (
@@ -18,7 +18,7 @@ export function useMpesaPayment() {
   const mutation = useMutation({
     mutationFn: async (payload) => {
       try {
-        return await httpClient.post('/payments/mpesa/stk-push', payload);
+        return await httpClient.post("/payments/mpesa/stk-push", payload);
       } catch (error) {
         throw normaliseError(error);
       }

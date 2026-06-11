@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { submitReview } from '../api/reviews.api';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { submitReview } from "../api/reviews.api";
 
 export function useSubmitReview() {
   const queryClient = useQueryClient();
@@ -7,8 +7,7 @@ export function useSubmitReview() {
   return useMutation({
     mutationFn: submitReview,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ["reviews"] });
     },
   });
 }
-

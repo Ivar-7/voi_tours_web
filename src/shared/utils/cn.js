@@ -3,5 +3,5 @@
 // export function cn(...inputs) { return twMerge(clsx(inputs)); }
 
 export function cn(...inputs) {
-  return inputs.filter(Boolean).join(' ');
+  return inputs.filter(Boolean).join(" ");
 }

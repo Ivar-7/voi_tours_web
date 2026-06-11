@@ -1,4 +1,4 @@
-export default function LoadingState({ message = 'Loading...' }) {
+export default function LoadingState({ message = "Loading..." }) {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-white px-6 text-stone-900 dark:bg-stone-950 dark:text-stone-50">
       <div className="flex flex-col items-center gap-4">

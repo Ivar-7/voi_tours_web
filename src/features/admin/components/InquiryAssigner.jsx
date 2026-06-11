@@ -2,4 +2,6 @@
 // Select dropdown of agents; calls assignInquiry mutation
 // Props: inquiryId, currentAgentId
 
-export default function InquiryAssigner() { return null; }
+export default function InquiryAssigner() {
+  return null;
+}

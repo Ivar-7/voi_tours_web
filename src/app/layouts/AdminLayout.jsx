@@ -1,22 +1,23 @@
-import { Link, NavLink, Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import LoadingState from '@shared/components/feedback/LoadingState';
+import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "@features/auth/hooks/useAuth";
+import LoadingState from "@shared/components/feedback/LoadingState";
 
 const adminItems = [
-  { to: '/admin/dashboard', label: 'Dashboard' },
-  { to: '/admin/bookings', label: 'Bookings' },
-  { to: '/admin/users', label: 'Users' },
-  { to: '/admin/inquiries', label: 'Inquiries' },
-  { to: '/admin/packages', label: 'Packages' },
+  { to: "/admin/dashboard", label: "Dashboard" },
+  { to: "/admin/destinations", label: "Destinations" },
+  { to: "/admin/bookings", label: "Bookings" },
+  { to: "/admin/users", label: "Users" },
+  { to: "/admin/inquiries", label: "Inquiries" },
+  { to: "/admin/packages", label: "Packages" },
 ];
 
 const navLinkClass = ({ isActive }) =>
   [
-    'block rounded-xl px-4 py-3 text-sm font-medium transition-colors',
+    "block rounded-xl px-4 py-3 text-sm font-medium transition-colors",
     isActive
-      ? 'bg-amber-500 text-stone-950'
-      : 'text-stone-300 hover:bg-stone-800 hover:text-white',
-  ].join(' ');
+      ? "bg-amber-500 text-stone-950"
+      : "text-stone-300 hover:bg-stone-800 hover:text-white",
+  ].join(" ");
 
 export default function AdminLayout() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -29,7 +30,7 @@ export default function AdminLayout() {
     return <Navigate to="/auth/login" replace />;
   }
 
-  const name = user?.full_name || user?.email || 'Admin';
+  const name = user?.full_name || user?.email || "Admin";
 
   return (
     <div className="min-h-dvh bg-stone-950 text-stone-50">

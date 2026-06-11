@@ -1,14 +1,23 @@
-// TODO: Implement QueryProvider
-// Wraps children with TanStack QueryClientProvider
-// Configure: staleTime 30s, retry 1, refetchOnWindowFocus false
-// Mounts ReactQueryDevtools in development
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function QueryProvider({ children }) {
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {import.meta.env.DEV ? (
+        <ReactQueryDevtools initialIsOpen={false} />
+      ) : null}
+    </QueryClientProvider>
   );
 }

@@ -1,15 +1,15 @@
-import { Link, NavLink, Outlet, Navigate } from 'react-router-dom';
-import { useAuth } from '@features/auth/hooks/useAuth';
-import LoadingState from '@shared/components/feedback/LoadingState';
-import { logout } from '@features/auth/api/auth.api';
+import { Link, NavLink, Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "@features/auth/hooks/useAuth";
+import LoadingState from "@shared/components/feedback/LoadingState";
+import { logout } from "@features/auth/api/auth.api";
 
 const navLinkClass = ({ isActive }) =>
   [
-    'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+    "rounded-full px-4 py-2 text-sm font-medium transition-colors",
     isActive
-      ? 'bg-stone-950 text-white dark:bg-stone-100 dark:text-stone-950'
-      : 'text-stone-600 hover:bg-stone-100 hover:text-stone-950 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-white',
-  ].join(' ');
+      ? "bg-stone-950 text-white dark:bg-stone-100 dark:text-stone-950"
+      : "text-stone-600 hover:bg-stone-100 hover:text-stone-950 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-white",
+  ].join(" ");
 
 export default function DashboardLayout() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -22,7 +22,7 @@ export default function DashboardLayout() {
     return <Navigate to="/auth/login" replace />;
   }
 
-  const name = user?.full_name || user?.email || 'Traveler';
+  const name = user?.full_name || user?.email || "Traveler";
 
   return (
     <div className="min-h-dvh bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50">

@@ -1,5 +1,5 @@
-import { useAuthStore } from '@/shared/store';
-import { normalizeError } from './errors';
+import { useAuthStore } from "@/shared/store";
+import { normalizeError } from "./errors";
 
 export function applyInterceptors(axiosInstance) {
   // Request interceptor: Attach Bearer Token
@@ -29,4 +29,3 @@ export function applyInterceptors(axiosInstance) {
     },
   );
 }
-

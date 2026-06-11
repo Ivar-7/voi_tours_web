@@ -43,12 +43,12 @@
  * @enum {string}
  */
 export const DestinationRegion = /** @type {const} */ ({
-  COAST:        'coast',
-  SAVANNA:      'savanna',
-  MOUNTAIN:     'mountain',
-  LAKE:         'lake',
-  URBAN:        'urban',
-  MARINE:       'marine',
+  COAST: "coast",
+  SAVANNA: "savanna",
+  MOUNTAIN: "mountain",
+  LAKE: "lake",
+  URBAN: "urban",
+  MARINE: "marine",
 });
 
 // ─── SEO sub-type ─────────────────────────────────────────────────────────────
