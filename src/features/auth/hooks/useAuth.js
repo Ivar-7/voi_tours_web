@@ -1,7 +1,14 @@
-// TODO: Implement useAuth
-// Returns { user, token, isLoading, isAuthenticated } from useAuthStore
-// Single source of truth for auth state across the app
+import { useAuthStore } from '@shared/store';
 
 export function useAuth() {
-  return { user: null, token: null, isLoading: true, isAuthenticated: false };
+  const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
+  return {
+    user,
+    token,
+    isLoading,
+    isAuthenticated: Boolean(user && token) || Boolean(user),
+  };
 }

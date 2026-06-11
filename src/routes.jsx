@@ -8,6 +8,7 @@ import AdminLayout from '@app/layouts/AdminLayout';
 import ProtectedRoute from '@features/auth/components/ProtectedRoute';
 import RoleGuard from '@features/auth/components/RoleGuard';
 import LoadingState from '@shared/components/feedback/LoadingState';
+import ErrorBoundary from '@shared/components/feedback/ErrorBoundary';
 import NotFoundPage from '@app/pages/NotFoundPage';
 
 // ── Lazy page imports ────────────────────────────────────────────────────────
@@ -79,7 +80,9 @@ const AdminPackagesPage = lazy(
 // ── Suspense wrapper ─────────────────────────────────────────────────────────
 
 const withSuspense = (element) => (
-  <Suspense fallback={<LoadingState />}>{element}</Suspense>
+  <ErrorBoundary>
+    <Suspense fallback={<LoadingState />}>{element}</Suspense>
+  </ErrorBoundary>
 );
 
 // ── Router ───────────────────────────────────────────────────────────────────
