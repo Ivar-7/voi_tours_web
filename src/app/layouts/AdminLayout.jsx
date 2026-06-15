@@ -1,6 +1,8 @@
 import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import LoadingState from "@shared/components/feedback/LoadingState";
+import RouteProgress from "@shared/components/feedback/RouteProgress";
+import PageTransition from "@shared/components/layout/PageTransition";
 
 const adminItems = [
   { to: "/admin/dashboard", label: "Dashboard" },
@@ -87,7 +89,10 @@ export default function AdminLayout() {
           </header>
 
           <main className="flex-1 px-5 py-6 sm:px-6 lg:px-8">
-            <Outlet />
+            <RouteProgress />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </section>
       </div>

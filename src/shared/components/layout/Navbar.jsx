@@ -1,25 +1,25 @@
-import { useMemo, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, UserCircle2, X } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Menu, UserCircle2, X } from "lucide-react";
 
-import { useAuth } from '@features/auth/hooks/useAuth';
-import { logout } from '@features/auth/api/auth.api';
+import { useAuth } from "@features/auth/hooks/useAuth";
+import { logout } from "@features/auth/api/auth.api";
 
 const navLinks = [
-  { to: '/', label: 'Home', exact: true },
-  { to: '/destinations', label: 'Destinations' },
-  { to: '/packages', label: 'Packages' },
-  { to: '/reviews', label: 'Reviews' },
-  { to: '/inquiry', label: 'Inquiry' },
+  { to: "/", label: "Home", exact: true },
+  { to: "/destinations", label: "Destinations" },
+  { to: "/packages", label: "Packages" },
+  { to: "/reviews", label: "Reviews" },
+  { to: "/inquiry", label: "Inquiry" },
 ];
 
 function navLinkClass({ isActive }) {
   return [
-    'text-sm font-medium transition-colors',
+    "text-sm font-medium transition-colors",
     isActive
-      ? 'text-amber-600 dark:text-amber-400'
-      : 'text-stone-700 hover:text-amber-600 dark:text-stone-300 dark:hover:text-amber-300',
-  ].join(' ');
+      ? "text-amber-600 dark:text-amber-400"
+      : "text-stone-700 hover:text-amber-600 dark:text-stone-300 dark:hover:text-amber-300",
+  ].join(" ");
 }
 
 export default function Navbar() {
@@ -28,18 +28,18 @@ export default function Navbar() {
   const { user, isAuthenticated } = useAuth();
 
   const initials = useMemo(() => {
-    const name = user?.full_name || user?.email || 'Guest';
+    const name = user?.full_name || user?.email || "Guest";
     return name
-      .split(' ')
+      .split(" ")
       .filter(Boolean)
       .slice(0, 2)
       .map((part) => part[0]?.toUpperCase())
-      .join('');
+      .join("");
   }, [user]);
 
   async function handleLogout() {
     await logout();
-    navigate('/');
+    navigate("/");
   }
 
   return (
@@ -59,7 +59,11 @@ export default function Navbar() {
                 strokeLinecap="round"
               />
               <path d="M8 14s1.5 2 4 2 4-2 4-2" strokeLinecap="round" />
-              <path d="M9 9h.01M15 9h.01" strokeLinecap="round" strokeWidth="2.5" />
+              <path
+                d="M9 9h.01M15 9h.01"
+                strokeLinecap="round"
+                strokeWidth="2.5"
+              />
             </svg>
           </span>
 
@@ -122,7 +126,11 @@ export default function Navbar() {
             aria-label="Toggle navigation menu"
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>

@@ -8,7 +8,7 @@ import DashboardLayout from "@app/layouts/DashboardLayout";
 import AdminLayout from "@app/layouts/AdminLayout";
 import ProtectedRoute from "@features/auth/components/ProtectedRoute";
 import RoleGuard from "@features/auth/components/RoleGuard";
-import LoadingState from "@shared/components/feedback/LoadingState";
+import RouteLoadingState from "@shared/components/feedback/RouteLoadingState";
 import ErrorBoundary from "@shared/components/feedback/ErrorBoundary";
 import NotFoundPage from "@app/pages/NotFoundPage";
 
@@ -93,9 +93,11 @@ const AdminPackageDetailPage = lazy(
 
 // ── Suspense wrapper ─────────────────────────────────────────────────────────
 
-const withSuspense = (element) => (
+const withSuspense = (element, variant = "public") => (
   <ErrorBoundary>
-    <Suspense fallback={<LoadingState />}>{element}</Suspense>
+    <Suspense fallback={<RouteLoadingState variant={variant} />}>
+      {element}
+    </Suspense>
   </ErrorBoundary>
 );
 
@@ -132,11 +134,11 @@ const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { index: true, element: <Navigate to="login" replace /> },
-      { path: "login", element: withSuspense(<LoginPage />) },
-      { path: "register", element: withSuspense(<RegisterPage />) },
+      { path: "login", element: withSuspense(<LoginPage />, "auth") },
+      { path: "register", element: withSuspense(<RegisterPage />, "auth") },
       {
         path: "forgot-password",
-        element: withSuspense(<ForgotPasswordPage />),
+        element: withSuspense(<ForgotPasswordPage />, "auth"),
       },
     ],
   },
@@ -151,30 +153,36 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="bookings" replace /> },
-      { path: "bookings", element: withSuspense(<MyBookingsPage />) },
+      {
+        path: "bookings",
+        element: withSuspense(<MyBookingsPage />, "dashboard"),
+      },
       {
         path: "bookings/:id",
-        element: withSuspense(<BookingDetailPage />),
+        element: withSuspense(<BookingDetailPage />, "dashboard"),
       },
       // :type = safari | sgr_transfer | hotel | event | delivery | flight
-      { path: "book/:type", element: withSuspense(<BookingPage />) },
+      {
+        path: "book/:type",
+        element: withSuspense(<BookingPage />, "dashboard"),
+      },
       {
         path: "book/:type/success",
-        element: withSuspense(<BookingSuccessPage />),
+        element: withSuspense(<BookingSuccessPage />, "dashboard"),
       },
       {
         path: "bookings/:bookingId/pay",
-        element: withSuspense(<PaymentPage />),
+        element: withSuspense(<PaymentPage />, "dashboard"),
       },
       {
         path: "payment/success",
-        element: withSuspense(<PaymentSuccessPage />),
+        element: withSuspense(<PaymentSuccessPage />, "dashboard"),
       },
       {
         path: "payment/failed",
-        element: withSuspense(<PaymentFailedPage />),
+        element: withSuspense(<PaymentFailedPage />, "dashboard"),
       },
-      { path: "profile", element: withSuspense(<ProfilePage />) },
+      { path: "profile", element: withSuspense(<ProfilePage />, "dashboard") },
     ],
   },
 
@@ -190,40 +198,40 @@ const router = createBrowserRouter([
       { index: true, element: <Navigate to="dashboard" replace /> },
       {
         path: "dashboard",
-        element: withSuspense(<AdminDashboardPage />),
+        element: withSuspense(<AdminDashboardPage />, "admin"),
       },
       {
         path: "destinations",
-        element: withSuspense(<AdminDestinationsPage />),
+        element: withSuspense(<AdminDestinationsPage />, "admin"),
       },
       {
         path: "destinations/new",
-        element: withSuspense(<AdminDestinationCreatePage />),
+        element: withSuspense(<AdminDestinationCreatePage />, "admin"),
       },
       {
         path: "destinations/:id",
-        element: withSuspense(<AdminDestinationDetailPage />),
+        element: withSuspense(<AdminDestinationDetailPage />, "admin"),
       },
       {
         path: "destinations/:id/edit",
-        element: withSuspense(<AdminDestinationEditPage />),
+        element: withSuspense(<AdminDestinationEditPage />, "admin"),
       },
       {
         path: "bookings",
-        element: withSuspense(<AdminBookingsPage />),
+        element: withSuspense(<AdminBookingsPage />, "admin"),
       },
-      { path: "users", element: withSuspense(<AdminUsersPage />) },
+      { path: "users", element: withSuspense(<AdminUsersPage />, "admin") },
       {
         path: "inquiries",
-        element: withSuspense(<AdminInquiriesPage />),
+        element: withSuspense(<AdminInquiriesPage />, "admin"),
       },
       {
         path: "packages",
-        element: withSuspense(<AdminPackagesPage />),
+        element: withSuspense(<AdminPackagesPage />, "admin"),
       },
       {
         path: "packages/:id",
-        element: withSuspense(<AdminPackageDetailPage />),
+        element: withSuspense(<AdminPackageDetailPage />, "admin"),
       },
     ],
   },

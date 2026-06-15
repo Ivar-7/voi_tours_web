@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const quickLinks = [
-  { to: '/destinations', label: 'Destinations' },
-  { to: '/packages', label: 'Packages' },
-  { to: '/reviews', label: 'Reviews' },
-  { to: '/inquiry', label: 'Inquiry' },
+  { to: "/destinations", label: "Destinations" },
+  { to: "/packages", label: "Packages" },
+  { to: "/reviews", label: "Reviews" },
+  { to: "/inquiry", label: "Inquiry" },
 ];
 
 export default function Footer() {
@@ -27,7 +27,11 @@ export default function Footer() {
                     strokeLinecap="round"
                   />
                   <path d="M8 14s1.5 2 4 2 4-2 4-2" strokeLinecap="round" />
-                  <path d="M9 9h.01M15 9h.01" strokeLinecap="round" strokeWidth="2.5" />
+                  <path
+                    d="M9 9h.01M15 9h.01"
+                    strokeLinecap="round"
+                    strokeWidth="2.5"
+                  />
                 </svg>
               </div>
               <div>
@@ -39,10 +43,13 @@ export default function Footer() {
             </div>
 
             <p className="mt-4 max-w-md text-sm leading-relaxed text-stone-400">
-              Voi Town, Taita Taveta County, Kenya. Tailor-made safaris, transfers,
-              beach escapes, and group travel plans with a warm local touch.
+              Voi Town, Taita Taveta County, Kenya. Tailor-made safaris,
+              transfers, beach escapes, and group travel plans with a warm local
+              touch.
             </p>
-            <p className="mt-2 text-xs text-stone-500">info@savannacrowntours.com</p>
+            <p className="mt-2 text-xs text-stone-500">
+              info@savannacrowntours.com
+            </p>
           </div>
 
           <div>
@@ -84,7 +91,8 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-stone-800 pt-8">
           <p className="text-xs text-stone-600">
-            © {new Date().getFullYear()} Savanna Crown Tours & Travel. All rights reserved.
+            © {new Date().getFullYear()} Savanna Crown Tours & Travel. All
+            rights reserved.
           </p>
           <p className="text-xs text-stone-700">Designed in Voi Town</p>
         </div>

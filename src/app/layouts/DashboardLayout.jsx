@@ -1,6 +1,8 @@
 import { Link, NavLink, Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import LoadingState from "@shared/components/feedback/LoadingState";
+import RouteProgress from "@shared/components/feedback/RouteProgress";
+import PageTransition from "@shared/components/layout/PageTransition";
 import { logout } from "@features/auth/api/auth.api";
 
 const navLinkClass = ({ isActive }) =>
@@ -73,6 +75,7 @@ export default function DashboardLayout() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <RouteProgress />
         <div className="mb-6 flex flex-wrap gap-2 md:hidden">
           <NavLink to="/dashboard/bookings" className={navLinkClass}>
             My Bookings
@@ -84,7 +87,9 @@ export default function DashboardLayout() {
             Profile
           </NavLink>
         </div>
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </main>
     </div>
   );
