@@ -113,7 +113,11 @@ export default function ForgotPasswordPage() {
               stroke="currentColor"
               strokeWidth="2"
             >
-              <path d="M10 12L6 8l4-4" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M10 12L6 8l4-4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             Back to sign in
           </Link>
@@ -150,9 +154,8 @@ export default function ForgotPasswordPage() {
                   Check your inbox
                 </p>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                  If an account exists for{" "}
-                  <strong>{getValues("email")}</strong>, a reset link is on
-                  its way.
+                  If an account exists for <strong>{getValues("email")}</strong>
+                  , a reset link is on its way.
                 </p>
               </motion.div>
             ) : (

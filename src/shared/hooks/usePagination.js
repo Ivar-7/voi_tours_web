@@ -1,9 +1,9 @@
-// TODO: Implement usePagination
-// Returns { page, totalPages, goTo, next, prev, canNext, canPrev }
-// Props: totalItems, pageSize, initialPage
-
 import { useMemo, useState } from "react";
 
+/**
+ * @param {{ totalItems?: number, pageSize?: number, initialPage?: number }} [params]
+ * @returns {{ page: number, totalPages: number, goTo: (page: number) => void, next: () => void, prev: () => void, canNext: boolean, canPrev: boolean }}
+ */
 export function usePagination({
   totalItems = 0,
   pageSize = 10,

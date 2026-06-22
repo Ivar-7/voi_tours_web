@@ -36,7 +36,12 @@ export default function UsersTable({
   if (isLoading) return <TableSkeleton />;
 
   if (!users.length) {
-    return <EmptyState title="No users yet" description="Registered customers will show up here." />;
+    return (
+      <EmptyState
+        title="No users yet"
+        description="Registered customers will show up here."
+      />
+    );
   }
 
   function handleRoleChange(uid, role) {

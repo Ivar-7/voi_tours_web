@@ -51,14 +51,20 @@ export default function PaymentStatusPoller({
     if (payment.status === "paid") {
       navigate(
         `/dashboard/payment/success?paymentId=${encodeURIComponent(paymentId)}${bookingId ? `&bookingId=${encodeURIComponent(bookingId)}` : ""}`,
-        { replace: true, state: { payment, bookingId, from: location.pathname } },
+        {
+          replace: true,
+          state: { payment, bookingId, from: location.pathname },
+        },
       );
     }
 
     if (payment.status === "failed" || payment.status === "cancelled") {
       navigate(
         `/dashboard/payment/failed?paymentId=${encodeURIComponent(paymentId)}${bookingId ? `&bookingId=${encodeURIComponent(bookingId)}` : ""}`,
-        { replace: true, state: { payment, bookingId, from: location.pathname } },
+        {
+          replace: true,
+          state: { payment, bookingId, from: location.pathname },
+        },
       );
     }
   }, [bookingId, location.pathname, navigate, payment, paymentId]);

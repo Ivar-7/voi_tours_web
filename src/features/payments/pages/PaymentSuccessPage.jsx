@@ -48,7 +48,11 @@ export default function PaymentSuccessPage() {
       <div className="flex flex-wrap gap-3">
         <Button
           as={Link}
-          to={bookingId ? `/dashboard/bookings/${bookingId}` : "/dashboard/bookings"}
+          to={
+            bookingId
+              ? `/dashboard/bookings/${bookingId}`
+              : "/dashboard/bookings"
+          }
         >
           View booking
           <ArrowRight className="h-4 w-4" />

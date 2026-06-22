@@ -37,7 +37,10 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div className="flex items-center gap-4">
-        <ProfileAvatar name={profile.full_name || profile.email} avatarUrl={profile.avatar_url} />
+        <ProfileAvatar
+          name={profile.full_name || profile.email}
+          avatarUrl={profile.avatar_url}
+        />
         <div>
           <h1 className="font-serif text-2xl font-bold text-text-primary">
             {profile.full_name || "Your profile"}

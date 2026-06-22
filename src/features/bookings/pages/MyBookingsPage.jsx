@@ -26,8 +26,16 @@ const TABS = [
       OperationalStatus.IN_PROGRESS,
     ],
   },
-  { value: "completed", label: "Completed", statuses: [OperationalStatus.COMPLETED] },
-  { value: "cancelled", label: "Cancelled", statuses: [OperationalStatus.CANCELLED] },
+  {
+    value: "completed",
+    label: "Completed",
+    statuses: [OperationalStatus.COMPLETED],
+  },
+  {
+    value: "cancelled",
+    label: "Cancelled",
+    statuses: [OperationalStatus.CANCELLED],
+  },
 ];
 
 export default function MyBookingsPage() {

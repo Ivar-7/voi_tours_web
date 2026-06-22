@@ -80,7 +80,9 @@ export async function getAdminStats() {
         getAggregateFromServer(bookingsCol, {
           totalRevenue: sum("paid_amount"),
         }),
-        getCountFromServer(query(inquiriesCol, where("is_converted", "==", false))),
+        getCountFromServer(
+          query(inquiriesCol, where("is_converted", "==", false)),
+        ),
       ]);
 
     return {

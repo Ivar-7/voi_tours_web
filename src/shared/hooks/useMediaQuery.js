@@ -1,9 +1,9 @@
-// TODO: Implement useMediaQuery
-// Returns boolean indicating whether the media query matches
-// e.g. useMediaQuery('(min-width: 768px)')
-
 import { useSyncExternalStore } from "react";
 
+/**
+ * @param {string} query — e.g. `"(min-width: 768px)"`
+ * @returns {boolean} whether the media query currently matches
+ */
 export function useMediaQuery(query) {
   return useSyncExternalStore(
     (onStoreChange) => {

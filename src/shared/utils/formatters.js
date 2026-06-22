@@ -51,9 +51,7 @@ export function formatDate(value) {
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) return "N/A";
 
-  return new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(
-    date,
-  );
+  return new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(date);
 }
 
 /**

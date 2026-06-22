@@ -30,4 +30,4 @@ so review lists/carousels never need a per-review profile lookup.
 `reviews`: `is_visible_on_homepage ASC, created_at DESC` (homepage
 carousel + the unfiltered `/reviews` listing). Package/destination-filtered
 queries skip `orderBy` and sort client-side instead, to avoid needing two
-more composite indexes — see `firestore.indexes.json`.
+more composite indexes — see `src/config/firebase/firestore.indexes.json`.

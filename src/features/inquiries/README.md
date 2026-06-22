@@ -14,8 +14,8 @@
 ## Firestore Rules
 
 `inquiries/{id}`: `create` is open to anyone (public form, no auth); `read`
-and `update` are restricted to `admin`/`agent`. See the repo-root
-`firestore.rules`.
+and `update` are restricted to `admin`/`agent`. See
+`src/config/firebase/firestore.rules`.
 
 ## Files
 

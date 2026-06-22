@@ -144,7 +144,10 @@ export default function AdminBookingsPage() {
         size="sm"
       >
         {priceTarget ? (
-          <PriceForm booking={priceTarget} onClose={() => setPriceTarget(null)} />
+          <PriceForm
+            booking={priceTarget}
+            onClose={() => setPriceTarget(null)}
+          />
         ) : null}
       </Modal>
     </div>

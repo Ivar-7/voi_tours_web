@@ -4,7 +4,8 @@ import { cn } from "@shared/utils/cn";
 
 const variants = {
   info: {
-    wrapper: "bg-accent-50 border-accent-400/30 text-accent-600 dark:bg-accent-500/10 dark:text-accent-400",
+    wrapper:
+      "bg-accent-50 border-accent-400/30 text-accent-600 dark:bg-accent-500/10 dark:text-accent-400",
     icon: Info,
   },
   success: {
@@ -55,7 +56,9 @@ export default function Alert({
       <Icon className="mt-0.5 h-4 w-4 shrink-0" />
       <div className="flex-1 text-text-primary">
         {title ? <p className="font-semibold">{title}</p> : null}
-        {children ? <div className="text-text-secondary">{children}</div> : null}
+        {children ? (
+          <div className="text-text-secondary">{children}</div>
+        ) : null}
       </div>
       {dismissible ? (
         <button

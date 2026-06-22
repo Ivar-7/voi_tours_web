@@ -41,7 +41,11 @@ export default function PaymentFailedPage() {
       <div className="flex flex-wrap gap-3">
         <Button
           as={Link}
-          to={bookingId ? `/dashboard/bookings/${bookingId}/pay` : "/dashboard/bookings"}
+          to={
+            bookingId
+              ? `/dashboard/bookings/${bookingId}/pay`
+              : "/dashboard/bookings"
+          }
         >
           Retry payment
           <ArrowRight className="h-4 w-4" />

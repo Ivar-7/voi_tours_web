@@ -14,8 +14,8 @@ export default function InquirySuccessMessage() {
           We've got your inquiry
         </h3>
         <p className="mt-1 text-sm text-text-secondary">
-          Our team will get back to you by email or phone within one
-          business day.
+          Our team will get back to you by email or phone within one business
+          day.
         </p>
       </div>
       <Button

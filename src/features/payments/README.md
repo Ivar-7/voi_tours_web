@@ -31,8 +31,9 @@ PaymentIntent function), so keeping them would mean fake/non-functional UI.
 
 - PayHero credentials live server-side only (`firebase_functions/.env` /
   Secret Manager); the frontend never sees them.
-- `payments/{id}` is read-only from the client (see `firestore.rules`) —
-  every field is written by the Cloud Functions' Admin SDK.
+- `payments/{id}` is read-only from the client (see
+  `src/config/firebase/firestore.rules`) — every field is written by the
+  Cloud Functions' Admin SDK.
 
 ## Files
 

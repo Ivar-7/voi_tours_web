@@ -17,14 +17,17 @@ const db = admin.firestore();
 export const onPaymentConfirmed = onDocumentUpdated(
   "payments/{paymentId}",
   async (event) => {
-    const after = event.data?.after.data();
+    const data = event.data;
+    if (!data) return;
+
+    const after = data.after.data();
     if (!after || after.status !== "paid") return;
 
     const bookingId = (after.metadata as Record<string, unknown> | undefined)
       ?.bookingId as string | undefined;
     if (!bookingId) return;
 
-    const paymentRef = event.data!.after.ref;
+    const paymentRef = data.after.ref;
     const bookingRef = db.collection("bookings").doc(bookingId);
 
     await db.runTransaction(async (tx) => {
@@ -47,12 +50,14 @@ export const onPaymentConfirmed = onDocumentUpdated(
 
       // Never downgrade a booking that's already fully paid (e.g. a stray
       // extra payment shouldn't flip it back to "partially_paid").
-      const paymentStatus =
-        booking.payment_status === "fully_paid"
-          ? "fully_paid"
-          : totalAmount != null && paidAmount >= totalAmount
-            ? "fully_paid"
-            : "partially_paid";
+      let paymentStatus: string;
+      if (booking.payment_status === "fully_paid") {
+        paymentStatus = "fully_paid";
+      } else if (totalAmount != null && paidAmount >= totalAmount) {
+        paymentStatus = "fully_paid";
+      } else {
+        paymentStatus = "partially_paid";
+      }
 
       tx.update(bookingRef, {
         paid_amount: paidAmount,

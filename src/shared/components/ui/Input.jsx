@@ -46,7 +46,8 @@ const Input = forwardRef(function Input(
             "h-11 w-full rounded-btn border border-border bg-surface px-3.5 text-sm text-text-primary placeholder:text-text-muted transition-colors focus:border-brand-500 focus:outline focus:outline-2 focus:outline-brand-500/20 disabled:cursor-not-allowed disabled:opacity-60",
             icon && "pl-10",
             suffixIcon && "pr-10",
-            error && "border-status-cancelled focus:border-status-cancelled focus:outline-status-cancelled/20",
+            error &&
+              "border-status-cancelled focus:border-status-cancelled focus:outline-status-cancelled/20",
             className,
           )}
           {...props}

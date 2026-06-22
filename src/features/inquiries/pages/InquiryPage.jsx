@@ -17,9 +17,9 @@ export default function InquiryPage() {
             Tell us about your trip
           </h1>
           <p className="mt-3 text-sm leading-6 text-stone-600 dark:text-stone-400">
-            Whether it's a safari, an SGR transfer, a hotel stay, an event, or
-            a delivery — share a few details and our team will follow up
-            with options and pricing.
+            Whether it's a safari, an SGR transfer, a hotel stay, an event, or a
+            delivery — share a few details and our team will follow up with
+            options and pricing.
           </p>
         </div>
 

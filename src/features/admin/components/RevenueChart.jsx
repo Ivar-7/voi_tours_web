@@ -35,8 +35,15 @@ export default function RevenueChart({ data = [], isLoading = false }) {
   return (
     <div className="h-64 rounded-2xl border border-stone-800 bg-stone-900/60 p-4">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#292524" vertical={false} />
+        <LineChart
+          data={data}
+          margin={{ top: 8, right: 16, bottom: 0, left: 0 }}
+        >
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#292524"
+            vertical={false}
+          />
           <XAxis
             dataKey="date"
             tickFormatter={(value) => formatDate(value)}

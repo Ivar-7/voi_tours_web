@@ -10,7 +10,8 @@ through `api/admin.api.js` (bookings/users/inquiries/stats) or the
 a second, finer-grained restriction applies to **packages and user
 management specifically**: only `role: "admin"` can create/edit/delete
 packages or change another user's role/active status (enforced both in the
-UI via a `canManage` flag and, defensively, in `firestore.rules`). Agents
+UI via a `canManage` flag and, defensively, in
+`src/config/firebase/firestore.rules`). Agents
 have full read/write access to bookings and inquiries.
 
 ## Pages
@@ -29,8 +30,8 @@ have full read/write access to bookings and inquiries.
 `getAggregateFromServer` + `sum()`) instead of downloading whole
 collections just to count/sum them. `getRevenueSeries()` buckets `payments`
 documents by day client-side (a single `where("status","==","paid")`
-query, no `orderBy`) to avoid a composite index — see the repo-root
-`firestore.indexes.json` notes.
+query, no `orderBy`) to avoid a composite index — see
+`src/config/firebase/firestore.indexes.json`.
 
 ## Notes
 

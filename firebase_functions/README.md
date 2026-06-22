@@ -83,9 +83,9 @@ booking already at `payment_status: "fully_paid"` is never downgraded.
 | `payments`  | `startPayheroPayment`, `payheroCallback`, `checkPaymentStatus` | One doc per payment attempt |
 | `bookings`  | `onPaymentConfirmed` (updates only)      | `paid_amount` / `payment_status` / `status`  |
 
-No client ever writes to `payments` directly (see `firestore.rules` at the
-repo root) — every field is set server-side via the Admin SDK, which
-bypasses security rules entirely.
+No client ever writes to `payments` directly (see
+`src/config/firebase/firestore.rules`) — every field is set server-side
+via the Admin SDK, which bypasses security rules entirely.
 
 ---
 

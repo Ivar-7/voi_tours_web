@@ -90,10 +90,13 @@ export async function submitReview(payload) {
   try {
     const uid = auth.currentUser?.uid;
     if (!uid) {
-      throw Object.assign(new Error("You must be signed in to leave a review."), {
-        code: "unauthenticated",
-        status: 401,
-      });
+      throw Object.assign(
+        new Error("You must be signed in to leave a review."),
+        {
+          code: "unauthenticated",
+          status: 401,
+        },
+      );
     }
 
     const docData = {

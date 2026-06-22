@@ -138,8 +138,8 @@ export default function SafariBookingForm({ onSubmit }) {
             </div>
           ) : (
             <p className="text-sm text-text-muted">
-              No {tier} / {season} pricing is set for this package yet. Our
-              team will confirm pricing after you submit.
+              No {tier} / {season} pricing is set for this package yet. Our team
+              will confirm pricing after you submit.
             </p>
           )}
         </div>

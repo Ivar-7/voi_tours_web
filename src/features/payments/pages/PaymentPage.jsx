@@ -91,7 +91,10 @@ export default function PaymentPage() {
             Our team will follow up with a quote before you can pay.
           </Alert>
         ) : alreadyPaid ? (
-          <Alert variant="success" title="This booking is already paid in full" />
+          <Alert
+            variant="success"
+            title="This booking is already paid in full"
+          />
         ) : (
           <MpesaPaymentForm booking={booking} />
         )}

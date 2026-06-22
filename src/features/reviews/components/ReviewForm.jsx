@@ -75,7 +75,11 @@ export default function ReviewForm({ packageId, destinationId, onSuccess }) {
           name="rating"
           control={control}
           render={({ field }) => (
-            <StarRating value={field.value} onChange={field.onChange} size="lg" />
+            <StarRating
+              value={field.value}
+              onChange={field.onChange}
+              size="lg"
+            />
           )}
         />
         {errors.rating ? (

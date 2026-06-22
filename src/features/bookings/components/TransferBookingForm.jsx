@@ -19,7 +19,10 @@ const VEHICLE_OPTIONS = [
  *
  * @param {{ onSubmit: (values: object) => void, type?: string }} props
  */
-export default function TransferBookingForm({ onSubmit, type = "sgr_transfer" }) {
+export default function TransferBookingForm({
+  onSubmit,
+  type = "sgr_transfer",
+}) {
   const {
     register,
     handleSubmit,

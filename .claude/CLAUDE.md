@@ -22,7 +22,7 @@
 
 ## Firebase
 
-- **Architecture**: Firebase app config in `src/config/firebase.js`; security rules and indexes (`firestore.rules`, `firestore.indexes.json`, `storage.rules`) live at the repo root, alongside `firebase.json`/`.firebaserc`.
+- **Architecture**: Firebase app config and rules/indexes all live together in `src/config/firebase/` (`firebase.js`, `firestore.rules`, `firestore.indexes.json`, `storage.rules`); `firebase.json`/`.firebaserc` at the repo root point at them.
 - **Rules**: Authorization-focused rules. Application code manages schema and business logic.
 - **Performance**: Indexes deliberately small to keep cost/latency low.
 - **Deploy**: Deploy indexes and rules if changes, all indexes should be in firestore indexes.

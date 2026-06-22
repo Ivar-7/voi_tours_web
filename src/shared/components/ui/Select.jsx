@@ -3,16 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@shared/utils/cn";
 
 const Select = forwardRef(function Select(
-  {
-    label,
-    error,
-    hint,
-    options = [],
-    placeholder,
-    className,
-    id,
-    ...props
-  },
+  { label, error, hint, options = [], placeholder, className, id, ...props },
   ref,
 ) {
   const generatedId = useId();

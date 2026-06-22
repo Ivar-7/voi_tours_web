@@ -25,7 +25,8 @@ export default function BookingDetailPage() {
   const { id } = useParams();
   const { data: booking, isLoading, isError, error } = useBooking(id);
 
-  const safariPackageId = booking?.type === "safari" ? booking.safari?.package_id : null;
+  const safariPackageId =
+    booking?.type === "safari" ? booking.safari?.package_id : null;
   const { data: safariPackage } = usePackageById(safariPackageId);
 
   if (isLoading) {

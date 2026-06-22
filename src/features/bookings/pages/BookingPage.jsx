@@ -25,10 +25,15 @@ function renderForm(type, onSubmit) {
       return <SafariBookingForm onSubmit={onSubmit} />;
     case ServiceType.SGR_TRANSFER:
       return (
-        <TransferBookingForm onSubmit={onSubmit} type={ServiceType.SGR_TRANSFER} />
+        <TransferBookingForm
+          onSubmit={onSubmit}
+          type={ServiceType.SGR_TRANSFER}
+        />
       );
     case ServiceType.FLIGHT:
-      return <TransferBookingForm onSubmit={onSubmit} type={ServiceType.FLIGHT} />;
+      return (
+        <TransferBookingForm onSubmit={onSubmit} type={ServiceType.FLIGHT} />
+      );
     case ServiceType.HOTEL:
       return <HotelBookingForm onSubmit={onSubmit} />;
     case ServiceType.EVENT:
@@ -56,7 +61,10 @@ export default function BookingPage() {
         <Alert variant="error" title="Unknown service">
           "{type}" isn't a service we offer.
         </Alert>
-        <Button className="mt-4" onClick={() => navigate("/dashboard/bookings")}>
+        <Button
+          className="mt-4"
+          onClick={() => navigate("/dashboard/bookings")}
+        >
           Back to my bookings
         </Button>
       </div>

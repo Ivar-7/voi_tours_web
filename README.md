@@ -36,7 +36,11 @@ src/
 ├── routes.jsx                  # Full route tree (createBrowserRouter)
 ├── index.css                   # Tailwind v4 directives + CSS design tokens
 ├── config/
-│   └── firebase.js             # Firebase app, auth, db, storage, functions, analytics
+│   └── firebase/
+│       ├── firebase.js             # Firebase app, auth, db, storage, functions, analytics
+│       ├── firestore.rules         # Firestore security rules (not deployed by the agent)
+│       ├── firestore.indexes.json  # Composite indexes (kept deliberately minimal)
+│       └── storage.rules           # Firebase Storage rules (avatars only)
 ├── app/
 │   ├── layouts/                # RootLayout · AuthLayout · DashboardLayout · AdminLayout
 │   └── pages/                  # NotFoundPage
@@ -46,7 +50,7 @@ src/
 │   │   ├── ui/                 # Button · Input · Select · Textarea · Card · Modal ·
 │   │   │                       # Badge · Avatar · Alert · Pagination · Spinner · Skeleton ·
 │   │   │                       # ThemeToggle
-│   │   ├── layout/              # Navbar · Footer · Sidebar · PageHeader · PageTransition
+│   │   ├── layout/              # Navbar · Footer · PageTransition
 │   │   └── feedback/            # ErrorBoundary · ErrorHandler · LoadingState · EmptyState
 │   ├── hooks/                   # useDebounce · useLocalStorage · usePagination ·
 │   │                            # useMediaQuery · useTheme
@@ -67,10 +71,7 @@ src/
     └── profile/                  # Avatar upload · ProfileForm · TierBadge · PasswordChange
 
 firebase_functions/              # Cloud Functions — PayHero payments (see its own README)
-firestore.rules                  # Firestore security rules (not deployed by the agent)
-firestore.indexes.json           # Composite indexes (kept deliberately minimal)
-storage.rules                    # Firebase Storage rules (avatars only)
-firebase.json / .firebaserc      # Firebase CLI project config
+firebase.json / .firebaserc      # Firebase CLI project config (points at src/config/firebase/)
 ```
 
 ---
@@ -136,7 +137,8 @@ is used.
 ## Firebase Setup
 
 Firestore, Storage, and Functions all need to exist in your Firebase
-project before the app works end-to-end:
+project before the app works end-to-end. Config files live under
+[src/config/firebase/](src/config/firebase/).
 
 1. Create/select a Firebase project and enable **Authentication**
    (Email/Password provider), **Firestore**, and **Storage** in the
@@ -147,9 +149,10 @@ project before the app works end-to-end:
    firebase login
    firebase use --add        # pick your project, alias it "default"
    ```
-3. Review `firestore.rules`, `firestore.indexes.json`, and `storage.rules`
-   at the repo root, then deploy them **when you're ready** (not run by
-   the agent that generated this setup):
+3. Review `src/config/firebase/firestore.rules`,
+   `src/config/firebase/firestore.indexes.json`, and
+   `src/config/firebase/storage.rules`, then deploy them **when you're
+   ready** (not run by the agent that generated this setup):
    ```bash
    firebase deploy --only firestore:rules
    firebase deploy --only firestore:indexes
@@ -174,10 +177,10 @@ project before the app works end-to-end:
 Most list queries use a single Firestore `where`/`orderBy` (auto-indexed)
 and apply secondary filters client-side instead of chaining more
 `where()` clauses — see `src/features/packages/api/packages.api.js` for
-the pattern this follows throughout the app. `firestore.indexes.json`
-only contains the 5 composite indexes that are actually required by a
-real query in the codebase; each one is commented on on in the owning
-feature's README.
+the pattern this follows throughout the app.
+`src/config/firebase/firestore.indexes.json` only contains the 5
+composite indexes that are actually required by a real query in the
+codebase; each one is documented in the owning feature's README.
 
 ---
 

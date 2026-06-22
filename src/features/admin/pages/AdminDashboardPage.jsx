@@ -1,4 +1,9 @@
-import { CalendarClock, ClipboardList, MessageSquarePlus, Wallet } from "lucide-react";
+import {
+  CalendarClock,
+  ClipboardList,
+  MessageSquarePlus,
+  Wallet,
+} from "lucide-react";
 import { formatCurrency } from "@shared/utils";
 import StatsCard from "../components/StatsCard";
 import RevenueChart from "../components/RevenueChart";
@@ -7,9 +12,13 @@ import { useAdminStats, useRevenueSeries } from "../hooks/useAdminStats";
 import { useAdminBookings } from "../hooks/useAdminBookings";
 
 export default function AdminDashboardPage() {
-  const { data: stats, isLoading: statsLoading, error: statsError } =
-    useAdminStats();
-  const { data: revenue = [], isLoading: revenueLoading } = useRevenueSeries(30);
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useAdminStats();
+  const { data: revenue = [], isLoading: revenueLoading } =
+    useRevenueSeries(30);
   const {
     data: bookingsResult,
     isLoading: bookingsLoading,
@@ -41,25 +50,27 @@ export default function AdminDashboardPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard
             label="Total bookings"
-            value={statsLoading ? "—" : stats?.totalBookings ?? 0}
+            value={statsLoading ? "—" : (stats?.totalBookings ?? 0)}
             icon={<ClipboardList className="h-4 w-4" />}
             variant="sky"
           />
           <StatsCard
             label="Revenue collected"
-            value={statsLoading ? "—" : formatCurrency(stats?.totalRevenue ?? 0)}
+            value={
+              statsLoading ? "—" : formatCurrency(stats?.totalRevenue ?? 0)
+            }
             icon={<Wallet className="h-4 w-4" />}
             variant="emerald"
           />
           <StatsCard
             label="Pending bookings"
-            value={statsLoading ? "—" : stats?.pendingBookings ?? 0}
+            value={statsLoading ? "—" : (stats?.pendingBookings ?? 0)}
             icon={<CalendarClock className="h-4 w-4" />}
             variant="amber"
           />
           <StatsCard
             label="New inquiries"
-            value={statsLoading ? "—" : stats?.newInquiries ?? 0}
+            value={statsLoading ? "—" : (stats?.newInquiries ?? 0)}
             icon={<MessageSquarePlus className="h-4 w-4" />}
             variant="violet"
           />

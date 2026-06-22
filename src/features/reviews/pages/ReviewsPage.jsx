@@ -45,8 +45,8 @@ export default function ReviewsPage() {
           Reviews
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600 dark:text-stone-400">
-          Read what travelers say about our packages and destinations, or
-          share your own experience.
+          Read what travelers say about our packages and destinations, or share
+          your own experience.
         </p>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_1fr]">

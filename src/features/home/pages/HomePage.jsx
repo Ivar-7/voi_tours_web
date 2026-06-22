@@ -180,7 +180,6 @@ function SectionLabel({ children }) {
   );
 }
 
-
 // ─── Section: Hero ─────────────────────────────────────────────────────────────
 
 function Hero() {

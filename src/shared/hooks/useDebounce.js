@@ -1,8 +1,14 @@
-// TODO: Implement useDebounce
-// Returns a debounced version of the given value after `delay` ms
-
 import { useEffect, useState } from "react";
 
+/**
+ * Returns a debounced version of `value` that only updates after `delay`
+ * ms have passed without `value` changing.
+ *
+ * @template T
+ * @param {T} value
+ * @param {number} [delay=300]
+ * @returns {T}
+ */
 export function useDebounce(value, delay = 300) {
   const [debouncedValue, setDebouncedValue] = useState(value);
 

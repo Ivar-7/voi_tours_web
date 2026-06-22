@@ -6,10 +6,7 @@ const DEFAULT_STEPS = ["Details", "Review", "Confirm"];
 /**
  * @param {{ currentStep: 1|2|3, steps?: string[] }} props
  */
-export default function BookingStepper({
-  currentStep,
-  steps = DEFAULT_STEPS,
-}) {
+export default function BookingStepper({ currentStep, steps = DEFAULT_STEPS }) {
   return (
     <ol className="flex items-center gap-2 sm:gap-4">
       {steps.map((label, index) => {
@@ -27,9 +24,7 @@ export default function BookingStepper({
                     "border-brand-600 bg-brand-600 text-text-inverse",
                   isActive &&
                     "border-brand-600 text-brand-600 dark:text-brand-400",
-                  !isComplete &&
-                    !isActive &&
-                    "border-border text-text-muted",
+                  !isComplete && !isActive && "border-border text-text-muted",
                 )}
               >
                 {isComplete ? <Check className="h-4 w-4" /> : stepNumber}
