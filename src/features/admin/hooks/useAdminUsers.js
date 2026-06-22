@@ -1,5 +1,20 @@
-// TODO: useQuery(['admin', 'users', params], getAdminUsers)
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAdminUsers, updateUserAccess } from "../api/admin.api";
+
 export function useAdminUsers(params = {}) {
-  void params;
-  return { data: [], total: 0, isLoading: false, error: null };
+  return useQuery({
+    queryKey: ["admin", "users", params],
+    queryFn: () => getAdminUsers(params),
+  });
+}
+
+export function useUpdateUserAccess() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ uid, payload }) => updateUserAccess(uid, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
 }

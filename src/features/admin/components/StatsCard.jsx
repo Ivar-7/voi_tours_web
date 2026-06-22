@@ -1,7 +1,31 @@
-// TODO: Implement StatsCard
-// Props: label, value, delta (%), icon, colour variant
-// Used in AdminDashboardPage to show KPI tiles
+const VARIANTS = {
+  amber: "bg-amber-500/10 text-amber-400",
+  emerald: "bg-emerald-500/10 text-emerald-400",
+  sky: "bg-sky-500/10 text-sky-400",
+  violet: "bg-violet-500/10 text-violet-400",
+};
 
-export default function StatsCard() {
-  return null;
+/**
+ * @param {{ label: string, value: string|number, icon?: React.ReactNode, variant?: keyof typeof VARIANTS }} props
+ */
+export default function StatsCard({ label, value, icon, variant = "amber" }) {
+  return (
+    <div className="rounded-2xl border border-stone-800 bg-stone-900/60 p-5">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-500">
+          {label}
+        </p>
+        {icon ? (
+          <span
+            className={`flex h-9 w-9 items-center justify-center rounded-full ${VARIANTS[variant] ?? VARIANTS.amber}`}
+          >
+            {icon}
+          </span>
+        ) : null}
+      </div>
+      <p className="mt-3 font-serif text-3xl font-bold text-stone-50">
+        {value}
+      </p>
+    </div>
+  );
 }

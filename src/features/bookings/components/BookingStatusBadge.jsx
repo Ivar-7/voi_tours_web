@@ -1,7 +1,8 @@
-// TODO: Implement BookingStatusBadge
-// Maps OperationalStatus values to colour + label
-// Props: status (OperationalStatus)
+import Badge from "@shared/components/ui/Badge";
 
-export default function BookingStatusBadge() {
-  return null;
+/**
+ * @param {{ status: import('@shared/types/enums').OperationalStatus }} props
+ */
+export default function BookingStatusBadge({ status }) {
+  return <Badge status={status} />;
 }

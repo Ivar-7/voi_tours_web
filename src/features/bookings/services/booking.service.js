@@ -1,3 +1,28 @@
+import { PricingSeason } from "@/shared/types/enums";
+
+// Kenya safari tourism seasonality: Jul–Sep (wildebeest migration) and
+// Dec–Jan (holidays) are peak; Apr–May (long rains) are low; the rest are
+// regular. Used to pre-select a sensible default — the customer's chosen
+// travel date always wins over any assumption.
+const PEAK_MONTHS = new Set([0, 6, 7, 8, 11]); // Jan, Jul, Aug, Sep, Dec
+const LOW_MONTHS = new Set([3, 4]); // Apr, May
+
+/**
+ * Derives a {@link PricingSeason} from a travel date.
+ *
+ * @param {string} dateString — ISO date, e.g. "2026-08-12"
+ * @returns {string}
+ */
+export function deriveSeasonFromDate(dateString) {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return PricingSeason.REGULAR;
+
+  const month = date.getUTCMonth();
+  if (PEAK_MONTHS.has(month)) return PricingSeason.PEAK;
+  if (LOW_MONTHS.has(month)) return PricingSeason.LOW;
+  return PricingSeason.REGULAR;
+}
+
 /**
  * Routes form data to the correct API request shape based on ServiceType.
  *

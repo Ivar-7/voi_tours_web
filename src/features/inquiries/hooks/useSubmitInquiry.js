@@ -1,4 +1,8 @@
-// TODO: useMutation wrapping submitInquiry; shows success state on completion
+import { useMutation } from "@tanstack/react-query";
+import { submitInquiry } from "../api/inquiries.api";
+
 export function useSubmitInquiry() {
-  return { mutate: () => {}, isPending: false, isSuccess: false, error: null };
+  return useMutation({
+    mutationFn: submitInquiry,
+  });
 }

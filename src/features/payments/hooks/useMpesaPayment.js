@@ -1,35 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
-import httpClient, { normaliseError } from "@/shared/api";
+import { initiatePayment } from "../api/payments.api";
 
-function pickPaymentId(data) {
-  return (
-    data?.paymentId ??
-    data?.payment_id ??
-    data?.id ??
-    data?.payment?.id ??
-    data?.payment?.paymentId ??
-    data?.checkoutRequestId ??
-    data?.checkout_request_id ??
-    null
-  );
-}
-
+/**
+ * Initiates an M-Pesa STK push via the `startPayheroPayment` Cloud
+ * Function. Resolves with `{ paymentId }`.
+ */
 export function useMpesaPayment() {
   const mutation = useMutation({
-    mutationFn: async (payload) => {
-      try {
-        return await httpClient.post("/payments/mpesa/stk-push", payload);
-      } catch (error) {
-        throw normaliseError(error);
-      }
-    },
+    mutationFn: (payload) => initiatePayment(payload),
   });
 
   return {
     mutate: mutation.mutate,
     mutateAsync: mutation.mutateAsync,
     isPending: mutation.isPending,
-    checkoutRequestId: pickPaymentId(mutation.data),
+    paymentId: mutation.data?.paymentId ?? null,
     error: mutation.error,
     data: mutation.data,
   };

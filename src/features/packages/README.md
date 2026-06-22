@@ -6,13 +6,15 @@
 
 ## Pricing Logic
 - The `PackagePricingTable` reads the authenticated user's `tier` from the store.
-- Season is determined by the selected `travel_date` (backend-resolved or client-approximated).
+- Season is determined by the selected `travel_date` via
+  `deriveSeasonFromDate` in `src/features/bookings/services/booking.service.js`
+  (Kenya tourism seasonality — no backend round-trip needed).
 - Price per person × `party_size` = `total_amount` passed to the booking flow.
 
 ## Files
 | Path | Role |
 |---|---|
-| `api/packages.api.js` | `GET /packages`, `GET /packages/:slug` |
+| `api/packages.api.js` | Firestore CRUD (collection: `packages`) |
 | `hooks/usePackages.js` | Filtered list |
 | `hooks/usePackage.js` | Single package detail |
 | `hooks/usePackagePricing.js` | Tier + season price resolver |

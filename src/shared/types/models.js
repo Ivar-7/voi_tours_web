@@ -14,6 +14,7 @@
  * @property {string}  phone
  * @property {'citizen'|'resident'|'international'} tier
  * @property {boolean} is_active
+ * @property {string}  [avatar_url] - Firebase Storage download URL
  * @property {string}  created_at  - ISO 8601
  * @property {string}  updated_at  - ISO 8601
  */
@@ -100,8 +101,12 @@
  * @property {string}  user_id
  * @property {'safari'|'sgr_transfer'|'flight'|'hotel'|'event'|'delivery'} type
  * @property {'pending'|'confirmed'|'in_progress'|'completed'|'cancelled'} status
- * @property {number}  total_amount
+ * @property {number|null} total_amount    - null until priced (quote-based service types)
  * @property {string}  currency
+ * @property {'unpaid'|'partially_paid'|'fully_paid'|'failed'|'refunded'} payment_status
+ *           - Denormalised onto the booking (instead of joining `payments`)
+ *             by the `onPaymentConfirmed` Cloud Function trigger.
+ * @property {number} [paid_amount] - Running total credited by `onPaymentConfirmed`.
  * @property {string|null} internal_notes
  * @property {string}  created_at
  * @property {string}  updated_at
@@ -161,16 +166,24 @@
 // ── Payments ──────────────────────────────────────────────────────────────────
 
 /**
+ * Shape of a `payments/{paymentId}` document, as written by the
+ * `startPayheroPayment` / `payheroCallback` Cloud Functions
+ * (firebase_functions/src/payments/). `metadata.bookingId` links a payment
+ * back to the booking it's paying for; everything else the caller passes
+ * in `metadata` is opaque to the payment functions themselves.
+ *
  * @typedef {Object} Payment
- * @property {string}  id
- * @property {string}  booking_id
+ * @property {string}  id              - Same value as `paymentId`.
+ * @property {string}  userId
  * @property {number}  amount
- * @property {string}  currency
- * @property {'mpesa'|'stripe'|'bank_transfer'} provider
- * @property {string}  provider_tx_id
- * @property {'unpaid'|'partially_paid'|'fully_paid'|'failed'|'refunded'} status
- * @property {Object}  gateway_metadata     - Raw M-Pesa / Stripe webhook payload
- * @property {string}  created_at
+ * @property {string}  phone
+ * @property {string}  description
+ * @property {'pending'|'paid'|'failed'|'cancelled'} status
+ * @property {string|null} checkoutRequestID
+ * @property {'callback'|'polling'|null} confirmedVia
+ * @property {string|null} confirmedAt
+ * @property {{ bookingId?: string, [key: string]: unknown }} metadata
+ * @property {string}  createdAt
  */
 
 // ── Reviews ───────────────────────────────────────────────────────────────────
@@ -179,6 +192,7 @@
  * @typedef {Object} Review
  * @property {string}      id
  * @property {string}      user_id
+ * @property {string}      user_name - Denormalised at submission time.
  * @property {string|null} package_id
  * @property {string|null} destination_id
  * @property {1|2|3|4|5}  rating

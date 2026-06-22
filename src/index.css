@@ -86,3 +86,9 @@ body {
 #root {
   min-height: 100dvh;
 }
+
+/* Decorative diagonal section divider (HomePage Stats section) — a custom
+   class instead of a Tailwind arbitrary clip-path value. */
+.diagonal-edge {
+  clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}

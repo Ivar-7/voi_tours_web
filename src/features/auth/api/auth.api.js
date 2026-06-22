@@ -5,16 +5,51 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 
-import httpClient, { normaliseError } from "@/shared/api";
+import { normaliseError } from "@/shared/api";
 import { useAuthStore } from "@/shared/store";
-import { auth } from "@/config/firebase";
+import { auth, db } from "@/config/firebase/firebase.js";
+import { UserRole, PassengerTier } from "@/shared/types/enums";
+
+const USERS_COLLECTION = "users";
+
+/**
+ * Converts a Firestore document snapshot into a plain {@link User} object
+ * with ISO-8601 date strings, so consumers (and the persisted auth store)
+ * never have to deal with raw Firestore Timestamp instances.
+ *
+ * @param {import('firebase/firestore').DocumentSnapshot} snap
+ * @returns {object}
+ */
+function snapToProfile(snap) {
+  const data = snap.data();
+
+  return {
+    ...data,
+    id: snap.id,
+    created_at:
+      data.created_at instanceof Timestamp
+        ? data.created_at.toDate().toISOString()
+        : (data.created_at ?? null),
+    updated_at:
+      data.updated_at instanceof Timestamp
+        ? data.updated_at.toDate().toISOString()
+        : (data.updated_at ?? null),
+  };
+}
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 
 /**
- * Signs in an existing user via Firebase, then hydrates the store
- * with the full profile fetched from the backend `/me` endpoint.
+ * Signs in an existing user via Firebase, then hydrates the store with the
+ * Firestore-backed profile.
  *
  * @param {string} email
  * @param {string} password
@@ -28,8 +63,7 @@ export async function loginWithEmail(email, password) {
       password,
     );
 
-    // Exchange the Firebase UID/token for our backend session.
-    const profile = await fetchMe();
+    const profile = await fetchUserProfile(firebaseUser);
 
     useAuthStore.getState().setAuth({ firebaseUser, profile });
 
@@ -42,43 +76,51 @@ export async function loginWithEmail(email, password) {
 // ─── Register ─────────────────────────────────────────────────────────────────
 
 /**
- * Creates a Firebase user, patches the Firebase display-name,
- * then POSTs to `/users` to create the backend record.
+ * Creates a Firebase user, patches the Firebase display-name, then creates
+ * the matching `users/{uid}` Firestore profile document.
  *
  * @param {string} email
  * @param {string} password
- * @param {{ displayName?: string, [key: string]: unknown }} profile
+ * @param {{ displayName?: string, phone?: string, [key: string]: unknown }} profile
  * @returns {Promise<{ firebaseUser: import('firebase/auth').User, profile: object }>}
  */
 export async function registerWithEmail(email, password, profile = {}) {
+  let firebaseUser;
+
   try {
-    const { user: firebaseUser } = await createUserWithEmailAndPassword(
+    ({ user: firebaseUser } = await createUserWithEmailAndPassword(
       auth,
       email,
       password,
-    );
+    ));
 
-    // Keep Firebase display name in sync when provided.
     if (profile.displayName) {
       await updateProfile(firebaseUser, { displayName: profile.displayName });
     }
 
-    // Create the backend record. The interceptor in httpClient will attach
-    // the Firebase ID token automatically.
-    const backendProfile = await httpClient.post("/users", {
-      uid: firebaseUser.uid,
+    const userDoc = {
+      id: firebaseUser.uid,
       email: firebaseUser.email,
-      ...profile,
-    });
+      full_name: profile.displayName || "",
+      phone: profile.phone || "",
+      role: UserRole.CUSTOMER,
+      tier: PassengerTier.CITIZEN,
+      is_active: true,
+      created_at: serverTimestamp(),
+      updated_at: serverTimestamp(),
+    };
 
-    useAuthStore.getState().setAuth({ firebaseUser, profile: backendProfile });
+    await setDoc(doc(db, USERS_COLLECTION, firebaseUser.uid), userDoc);
 
-    return { firebaseUser, profile: backendProfile };
+    const createdProfile = await fetchUserProfile(firebaseUser);
+    useAuthStore.getState().setAuth({ firebaseUser, profile: createdProfile });
+
+    return { firebaseUser, profile: createdProfile };
   } catch (err) {
-    // Roll back Firebase user if the backend call failed so the two systems
-    // stay consistent.
-    if (auth.currentUser) {
-      await auth.currentUser.delete().catch(() => {
+    // Roll back the Firebase Auth user if the Firestore profile write failed
+    // so the two systems never drift out of sync.
+    if (firebaseUser) {
+      await firebaseUser.delete().catch(() => {
         // Swallow secondary error — primary error is re-thrown below.
       });
     }
@@ -97,7 +139,6 @@ export async function logout() {
   try {
     await signOut(auth);
   } finally {
-    // Always clear local state, even if Firebase signOut threw.
     useAuthStore.getState().clearAuth();
   }
 }
@@ -118,15 +159,42 @@ export async function forgotPassword(email) {
   }
 }
 
-// ─── Internal helpers ─────────────────────────────────────────────────────────
+// ─── Profile lookup ───────────────────────────────────────────────────────────
 
 /**
- * Fetches the current user's profile from the backend.
- * Relies on the auth interceptor in `httpClient` to attach the Firebase
- * ID token as a Bearer header.
+ * Fetches the Firestore `users/{uid}` profile for a signed-in Firebase user.
+ * If no profile document exists yet (e.g. a Firebase Auth user created
+ * before this collection existed, or directly via the console), a default
+ * `customer` profile is created on the fly so the app never has to handle a
+ * signed-in user with no profile.
  *
+ * @param {import('firebase/auth').User} firebaseUser
  * @returns {Promise<object>}
  */
-async function fetchMe() {
-  return httpClient.get("/me");
+export async function fetchUserProfile(firebaseUser) {
+  const ref = doc(db, USERS_COLLECTION, firebaseUser.uid);
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    return snapToProfile(snap);
+  }
+
+  const fallbackDoc = {
+    id: firebaseUser.uid,
+    email: firebaseUser.email,
+    full_name: firebaseUser.displayName || "",
+    phone: "",
+    role: UserRole.CUSTOMER,
+    tier: PassengerTier.CITIZEN,
+    is_active: true,
+    created_at: serverTimestamp(),
+    updated_at: serverTimestamp(),
+  };
+
+  await setDoc(ref, fallbackDoc);
+
+  // Re-fetch so the serverTimestamp() sentinels are resolved to real values
+  // before this profile is persisted into the auth store.
+  const created = await getDoc(ref);
+  return snapToProfile(created);
 }

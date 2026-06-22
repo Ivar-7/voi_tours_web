@@ -422,7 +422,7 @@ export default function RegisterPage() {
             </svg>
           </div>
           <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Acme
+            Savanna Crown
           </span>
         </motion.div>
 
@@ -782,7 +782,7 @@ export default function RegisterPage() {
                 <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
                   Already have an account?{" "}
                   <Link
-                    to="/login"
+                    to="/auth/login"
                     className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
                   >
                     Sign in
@@ -799,24 +799,21 @@ export default function RegisterPage() {
           variants={fadeUp}
           className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-600"
         >
-          Protected by reCAPTCHA —{" "}
-          <a
-            href="https://policies.google.com/privacy"
-            target="_blank"
-            rel="noreferrer"
-            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
-          >
-            Privacy
-          </a>{" "}
-          &{" "}
-          <a
-            href="https://policies.google.com/terms"
-            target="_blank"
-            rel="noreferrer"
+          By creating an account you agree to our{" "}
+          <Link
+            to="/terms"
             className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
           >
             Terms
-          </a>
+          </Link>{" "}
+          and{" "}
+          <Link
+            to="/privacy"
+            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
+          >
+            Privacy Policy
+          </Link>
+          .
         </motion.p>
       </motion.div>
     </div>

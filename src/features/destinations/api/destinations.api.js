@@ -32,7 +32,7 @@ import {
   Timestamp,
 } from "firebase/firestore";
 
-import { db, auth } from "@/config/firebase";
+import { db, auth } from "@/config/firebase/firebase.js";
 import { normaliseError } from "@/shared/api";
 
 // ─── Constants ────────────────────────────────────────────────────────────────

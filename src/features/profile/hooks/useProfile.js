@@ -1,4 +1,9 @@
-// TODO: useQuery(['profile', 'me'], getMyProfile)
+import { useQuery } from "@tanstack/react-query";
+import { getMyProfile } from "../api/profile.api";
+
 export function useProfile() {
-  return { data: null, isLoading: false, error: null };
+  return useQuery({
+    queryKey: ["profile", "me"],
+    queryFn: getMyProfile,
+  });
 }

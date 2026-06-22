@@ -1,6 +1,11 @@
-// TODO: Implement useForgotPassword
-// useMutation wrapping forgotPassword; shows success toast on completion
+import { useMutation } from "@tanstack/react-query";
+import { forgotPassword } from "../api/auth.api";
 
+/**
+ * Wraps `forgotPassword` (Firebase `sendPasswordResetEmail`) in a mutation.
+ */
 export function useForgotPassword() {
-  return { mutate: () => {}, isPending: false, isSuccess: false, error: null };
+  return useMutation({
+    mutationFn: (email) => forgotPassword(email),
+  });
 }

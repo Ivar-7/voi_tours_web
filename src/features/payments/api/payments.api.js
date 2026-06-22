@@ -1,47 +1,94 @@
-import httpClient, { normaliseError } from "@/shared/api";
+/**
+ * @file payments.api.js
+ * Wires the frontend directly to the PayHero Cloud Functions
+ * (firebase_functions/src/payments/) instead of a REST backend:
+ *
+ *   - `initiatePayment`     → `startPayheroPayment` callable (STK push)
+ *   - `checkPaymentStatus`  → `checkPaymentStatus` callable (manual re-check)
+ *   - `subscribeToPayment`  → Firestore listener on `payments/{paymentId}`,
+ *                             updated in real time by the `payheroCallback`
+ *                             webhook.
+ */
+
+import { httpsCallable } from "firebase/functions";
+import { doc, onSnapshot, Timestamp } from "firebase/firestore";
+
+import { db, functions } from "@/config/firebase/firebase.js";
+import { normaliseError } from "@/shared/api";
+
+const startPayheroPaymentFn = httpsCallable(functions, "startPayheroPayment");
+const checkPaymentStatusFn = httpsCallable(functions, "checkPaymentStatus");
+
+function timestampToIso(value) {
+  return value instanceof Timestamp
+    ? value.toDate().toISOString()
+    : (value ?? null);
+}
+
+function snapToPayment(snap) {
+  const data = snap.data();
+
+  return {
+    ...data,
+    id: snap.id,
+    createdAt: timestampToIso(data.createdAt),
+    confirmedAt: timestampToIso(data.confirmedAt),
+  };
+}
 
 /**
- * Initiates a payment for a booking.
+ * Initiates an M-Pesa STK push via PayHero.
  *
- * @param {string} bookingId
- * @param {'mpesa'|'stripe'|'bank_transfer'} provider
- * @param {number} amount
- * @returns {Promise<import('@/shared/types/models').Payment>}
+ * @param {{ amount: number, phoneNumber: string, description: string, metadata?: Record<string, unknown> }} params
+ * @returns {Promise<{ paymentId: string }>}
  */
-export async function initiatePayment(bookingId, provider, amount) {
+export async function initiatePayment({
+  amount,
+  phoneNumber,
+  description,
+  metadata,
+}) {
   try {
-    return await httpClient.post("/payments", { bookingId, provider, amount });
-  } catch (error) {
-    throw normaliseError(error);
+    const { data } = await startPayheroPaymentFn({
+      amount,
+      phoneNumber,
+      description,
+      metadata,
+    });
+    return data;
+  } catch (err) {
+    throw normaliseError(err);
   }
 }
 
 /**
- * Gets status of a payment by ID.
+ * Asks the Cloud Function to re-check PayHero for a status update. Useful
+ * as a fallback when the `payheroCallback` webhook is slow or doesn't land.
  *
  * @param {string} paymentId
- * @returns {Promise<import('@/shared/types/models').Payment>}
+ * @returns {Promise<{ status: 'pending'|'paid'|'failed'|'cancelled' }>}
  */
-export async function getPaymentStatus(paymentId) {
+export async function checkPaymentStatus(paymentId) {
   try {
-    return await httpClient.get(`/payments/${paymentId}`);
-  } catch (error) {
-    throw normaliseError(error);
+    const { data } = await checkPaymentStatusFn({ paymentId });
+    return data;
+  } catch (err) {
+    throw normaliseError(err);
   }
 }
 
 /**
- * Confirms an M-Pesa STK push payment.
+ * Subscribes to real-time updates for a `payments/{paymentId}` document.
  *
- * @param {string} checkoutRequestId
- * @returns {Promise<import('@/shared/types/models').Payment>}
+ * @param {string} paymentId
+ * @param {(payment: import('@/shared/types/models').Payment|null) => void} onChange
+ * @param {(error: import('@/shared/api').AppError) => void} [onError]
+ * @returns {() => void} unsubscribe
  */
-export async function confirmMpesaPayment(checkoutRequestId) {
-  try {
-    return await httpClient.post("/payments/mpesa/confirm", {
-      checkoutRequestId,
-    });
-  } catch (error) {
-    throw normaliseError(error);
-  }
+export function subscribeToPayment(paymentId, onChange, onError) {
+  return onSnapshot(
+    doc(db, "payments", paymentId),
+    (snap) => onChange(snap.exists() ? snapToPayment(snap) : null),
+    (err) => onError?.(normaliseError(err)),
+  );
 }

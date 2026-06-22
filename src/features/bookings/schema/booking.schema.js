@@ -1,8 +1,8 @@
-// TODO: Zod schemas for all booking form types
 import { z } from "zod";
 
 export const safariBookingSchema = z.object({
-  package_id: z.string().uuid(),
+  // Firestore document IDs aren't UUIDs — just require a non-empty id.
+  package_id: z.string().min(1, "Select a package."),
   travel_date: z.string().date(),
   party_size: z.number().int().min(1),
 });
@@ -10,7 +10,9 @@ export const safariBookingSchema = z.object({
 export const transferBookingSchema = z.object({
   pickup_location: z.string().min(3),
   dropoff_location: z.string().min(3),
-  pickup_time: z.string().datetime(),
+  // `local: true` accepts the bare (no UTC offset) value produced by
+  // <input type="datetime-local">.
+  pickup_time: z.string().datetime({ local: true }),
   vehicle_type: z.string().min(2),
   flight_or_train_number: z.string().optional(),
 });

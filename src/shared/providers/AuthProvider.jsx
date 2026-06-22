@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/config/firebase";
+import { auth } from "@/config/firebase/firebase.js";
 import { useAuthStore } from "@/shared/store";
-import httpClient from "@/shared/api";
+import { fetchUserProfile } from "@features/auth/api/auth.api";
 
 export default function AuthProvider({ children }) {
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -21,12 +21,12 @@ export default function AuthProvider({ children }) {
             setToken(token);
 
             try {
-              const profile = await httpClient.get("/me");
+              const profile = await fetchUserProfile(firebaseUser);
               setAuth({ firebaseUser, profile, token });
             } catch (error) {
-              // Backend may be down — still mark auth as resolved with
-              // the Firebase user so the UI can function offline.
-              console.warn("Failed to fetch backend profile:", error);
+              // Firestore may be unreachable — still mark auth as resolved
+              // with the Firebase user so the UI can function offline.
+              console.warn("Failed to fetch user profile:", error);
               setAuth({ firebaseUser, profile: null, token });
             }
           } else {

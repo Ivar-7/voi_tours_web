@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Only avatars are stored in Firebase Storage today — destinations/packages
+// use externally-hosted image URLs (see DestinationEditorForm), so there's
+// no other path to authorize.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /avatars/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { useAuth } from "@features/auth/hooks/useAuth";
 import LoadingState from "@shared/components/feedback/LoadingState";
 import RouteProgress from "@shared/components/feedback/RouteProgress";
 import PageTransition from "@shared/components/layout/PageTransition";
+import { ThemeToggle } from "@shared/components/ui";
 import { logout } from "@features/auth/api/auth.api";
 
 const navLinkClass = ({ isActive }) =>
@@ -63,6 +64,7 @@ export default function DashboardLayout() {
                 Customer dashboard
               </p>
             </div>
+            <ThemeToggle />
             <button
               type="button"
               onClick={logout}

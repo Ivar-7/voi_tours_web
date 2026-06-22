@@ -4,6 +4,7 @@ import { Menu, UserCircle2, X } from "lucide-react";
 
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { logout } from "@features/auth/api/auth.api";
+import { ThemeToggle } from "@shared/components/ui";
 
 const navLinks = [
   { to: "/", label: "Home", exact: true },
@@ -118,6 +119,8 @@ export default function Navbar() {
               Login
             </Link>
           )}
+
+          <ThemeToggle />
 
           <button
             type="button"

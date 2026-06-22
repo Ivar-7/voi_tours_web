@@ -1,6 +1,13 @@
-﻿# Voi Tours — Web Frontend
+# Voi Tours — Web Frontend
 
-Customer-facing and admin web application for Voi Tours, a Kenyan tour operator offering safaris, SGR transfers, hotel bookings, event planning, and door-to-door delivery.
+Customer-facing and admin web application for Voi Tours (branded in-app as
+"Savanna Crown"), a Kenyan tour operator offering safaris, SGR transfers,
+hotel bookings, event planning, and door-to-door delivery.
+
+**There is no separate backend.** Firebase is the entire backend:
+**Auth** (sign-in/up), **Firestore** (all app data), **Storage** (avatars),
+and **Cloud Functions** (`firebase_functions/`, M-Pesa payments via
+PayHero). The frontend talks to Firebase directly — no REST API server.
 
 ---
 
@@ -11,11 +18,11 @@ Customer-facing and admin web application for Voi Tours, a Kenyan tour operator 
 | Framework | React 19 + Vite 8 |
 | Routing | React Router v7 |
 | Styling | Tailwind CSS v4 (design tokens) |
-| Server State | TanStack Query v5 |
 | Client State | Zustand v5 |
+| Server State | TanStack React Query v5 |
 | Forms | React Hook Form v7 + Zod v3 |
-| Auth / DB | Firebase v11 (Auth + Firestore + Storage) |
-| Payments | Stripe v5 + M-Pesa (STK Push) |
+| Backend | Firebase v11 (Auth + Firestore + Storage + Functions) |
+| Payments | PayHero (M-Pesa STK push) via Cloud Functions |
 | Animation | Framer Motion v12 |
 | Charts | Recharts v2 |
 
@@ -29,32 +36,41 @@ src/
 ├── routes.jsx                  # Full route tree (createBrowserRouter)
 ├── index.css                   # Tailwind v4 directives + CSS design tokens
 ├── config/
-│   └── firebase.js             # Firebase app, auth, db, storage, analytics
+│   └── firebase.js             # Firebase app, auth, db, storage, functions, analytics
 ├── app/
 │   ├── layouts/                # RootLayout · AuthLayout · DashboardLayout · AdminLayout
 │   └── pages/                  # NotFoundPage
 ├── shared/
-│   ├── api/                    # Axios client, interceptors, error normalisation
+│   ├── api/                    # AppError + normaliseError (Firebase-error-aware)
 │   ├── components/
-│   │   ├── ui/                 # Button · Input · Card · Modal · Badge · Avatar · ...
-│   │   ├── layout/             # Navbar · Footer · Sidebar · PageHeader
-│   │   └── feedback/           # ErrorBoundary · ErrorHandler · LoadingState · EmptyState
-│   ├── hooks/                  # useDebounce · useLocalStorage · usePagination · useMediaQuery
-│   ├── providers/              # AppProvider · AuthProvider · QueryProvider · ThemeProvider
-│   ├── store/                  # auth.store (Zustand)
-│   ├── types/                  # enums.js · models.js (JSDoc typedefs from schema)
-│   └── utils/                  # formatters · validators · cn
+│   │   ├── ui/                 # Button · Input · Select · Textarea · Card · Modal ·
+│   │   │                       # Badge · Avatar · Alert · Pagination · Spinner · Skeleton ·
+│   │   │                       # ThemeToggle
+│   │   ├── layout/              # Navbar · Footer · Sidebar · PageHeader · PageTransition
+│   │   └── feedback/            # ErrorBoundary · ErrorHandler · LoadingState · EmptyState
+│   ├── hooks/                   # useDebounce · useLocalStorage · usePagination ·
+│   │                            # useMediaQuery · useTheme
+│   ├── providers/                # AppProvider · AuthProvider · QueryProvider · ThemeProvider
+│   ├── store/                    # auth.store (Zustand)
+│   ├── types/                    # enums.js · models.js (JSDoc typedefs)
+│   └── utils/                    # formatters · validators (Kenyan phone) · cn
 └── features/
-    ├── auth/                   # Login · Register · ForgotPassword · ProtectedRoute · RoleGuard
-    ├── home/                   # Hero · FeaturedDestinations · FeaturedPackages · Testimonials
-    ├── destinations/           # Listing · Detail · Gallery · RegionFilter
-    ├── packages/               # Listing · Detail · Itinerary · PricingTable
-    ├── bookings/               # 5 typed forms (safari · transfer · delivery · hotel · event)
-    ├── payments/               # Stripe + M-Pesa flows · StatusPoller · Receipt
-    ├── reviews/                # ReviewForm · ReviewList · StarRating · Carousel
-    ├── inquiries/              # Public lead form (honeypot protected)
-    ├── admin/                  # Dashboard · Bookings · Users · Inquiries · Packages
-    └── profile/                # Avatar · ProfileForm · TierBadge · PasswordChange
+    ├── auth/                    # Login · Register · ForgotPassword · ProtectedRoute · RoleGuard
+    ├── home/                    # HomePage (real destinations/packages/reviews data)
+    ├── destinations/            # Listing · Detail · Gallery · RegionFilter · Admin CRUD
+    ├── packages/                # Listing · Detail · Itinerary · PricingTable · Admin CRUD
+    ├── bookings/                # 5 typed forms (safari · transfer · delivery · hotel · event)
+    ├── payments/                # PayHero/M-Pesa flow · live status listener · Receipt
+    ├── reviews/                 # ReviewForm · ReviewList · StarRating · homepage Carousel
+    ├── inquiries/                # Public lead form (honeypot protected)
+    ├── admin/                    # Dashboard · Bookings · Users · Inquiries · Packages
+    └── profile/                  # Avatar upload · ProfileForm · TierBadge · PasswordChange
+
+firebase_functions/              # Cloud Functions — PayHero payments (see its own README)
+firestore.rules                  # Firestore security rules (not deployed by the agent)
+firestore.indexes.json           # Composite indexes (kept deliberately minimal)
+storage.rules                    # Firebase Storage rules (avatars only)
+firebase.json / .firebaserc      # Firebase CLI project config
 ```
 
 ---
@@ -66,7 +82,7 @@ src/
 | Public | `/` | None |
 | Auth | `/auth` | Unauthenticated only |
 | Dashboard | `/dashboard` | Any logged-in user |
-| Admin | `/admin` | `admin` or `agent` role |
+| Admin | `/admin` | `admin` or `agent` role (packages/users management further restricted to `admin` only — see `src/features/admin/README.md`) |
 
 ---
 
@@ -76,17 +92,21 @@ src/
 
 ```bash
 npm install
+cd firebase_functions && npm install && cd ..
 ```
 
 ### 2. Configure environment
 
 ```bash
 cp .env.example .env
+cp firebase_functions/.env.example firebase_functions/.env
 ```
 
-Fill in all values in `.env` (Firebase keys, Stripe publishable key, API base URL).
+Fill in `.env` with your Firebase project's web config (Project settings →
+General → Your apps), and `firebase_functions/.env` with PayHero
+credentials (see `firebase_functions/README.md`).
 
-### 3. Run dev server
+### 3. Run the dev server
 
 ```bash
 npm run dev
@@ -99,19 +119,65 @@ npm run build        # Production build
 npm run preview      # Preview production build locally
 npm run lint         # ESLint
 npm run format       # Prettier
+npm run typecheck    # No-op (JS project — kept for the verification pipeline)
 ```
 
 ---
 
 ## Environment Variables
 
-See [.env.example](.env.example) for the full list. Required groups:
+See [.env.example](.env.example) for the frontend and
+[firebase_functions/.env.example](firebase_functions/.env.example) for
+Cloud Functions. There is no `VITE_API_BASE_URL` or Stripe key — neither
+is used.
 
-- **API** — `VITE_API_BASE_URL`
-- **Firebase** — 7 keys (`VITE_FIREBASE_*`)
-- **Stripe** — `VITE_STRIPE_PUBLISHABLE_KEY`
-- **M-Pesa** — `VITE_MPESA_ENABLED`
-- **App** — `VITE_APP_NAME`, `VITE_APP_ENV`
+---
+
+## Firebase Setup
+
+Firestore, Storage, and Functions all need to exist in your Firebase
+project before the app works end-to-end:
+
+1. Create/select a Firebase project and enable **Authentication**
+   (Email/Password provider), **Firestore**, and **Storage** in the
+   Firebase console.
+2. Log in and select the project locally:
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   firebase use --add        # pick your project, alias it "default"
+   ```
+3. Review `firestore.rules`, `firestore.indexes.json`, and `storage.rules`
+   at the repo root, then deploy them **when you're ready** (not run by
+   the agent that generated this setup):
+   ```bash
+   firebase deploy --only firestore:rules
+   firebase deploy --only firestore:indexes
+   firebase deploy --only storage:rules
+   ```
+4. Set PayHero secrets and deploy Cloud Functions (see
+   `firebase_functions/README.md` for the full variable list):
+   ```bash
+   firebase functions:secrets:set PAYHERO_API_KEY
+   firebase functions:secrets:set PAYHERO_API_SECRET
+   firebase functions:secrets:set PAYHERO_CHANNEL_ID
+   firebase functions:secrets:set PAYHERO_CALLBACK_URL
+   firebase functions:secrets:set PAYHERO_CALLBACK_SECRET
+   firebase deploy --only functions
+   ```
+5. **Bootstrap your first admin.** There's no invite flow — register a
+   normal account through the app, then in the Firestore console open
+   `users/{your-uid}` and change `role` from `"customer"` to `"admin"`.
+
+### Why the indexes are minimal
+
+Most list queries use a single Firestore `where`/`orderBy` (auto-indexed)
+and apply secondary filters client-side instead of chaining more
+`where()` clauses — see `src/features/packages/api/packages.api.js` for
+the pattern this follows throughout the app. `firestore.indexes.json`
+only contains the 5 composite indexes that are actually required by a
+real query in the codebase; each one is commented on on in the owning
+feature's README.
 
 ---
 
@@ -128,4 +194,16 @@ See [.env.example](.env.example) for the full list. Required groups:
 
 ## Pricing Model
 
-Package prices vary by **passenger tier** (`citizen` · `resident` · `international`) and **season** (`low` · `regular` · `peak`). Citizens/residents are billed in KES; international in USD.
+Safari package prices vary by **passenger tier** (`citizen` · `resident` ·
+`international`) and **season** (`low` · `regular` · `peak`), looked up
+from the package's `pricing` array. The other 5 service types have no
+fixed catalogue — they're created as quote requests and priced by an
+admin before the customer can pay (see `src/features/bookings/README.md`
+and `src/features/admin/README.md`).
+
+## Payments
+
+M-Pesa only, via [PayHero](https://payhero.co.ke), called directly from
+the frontend as Firebase Cloud Functions (`startPayheroPayment` /
+`checkPaymentStatus`) — see `src/features/payments/README.md` and
+`firebase_functions/README.md` for the full flow.

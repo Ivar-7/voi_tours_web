@@ -1,6 +1,16 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useDestinations } from "@features/destinations/hooks/useDestinations";
+import { usePackages } from "@features/packages/hooks/usePackages";
+import {
+  formatCurrency,
+  formatDuration,
+  getMinPrice,
+} from "@features/packages/utils/packages.utils";
+import InquiryForm from "@features/inquiries/components/InquiryForm";
+import InquirySuccessMessage from "@features/inquiries/components/InquirySuccessMessage";
+import HomepageReviewsCarousel from "@features/reviews/components/HomepageReviewsCarousel";
 
 // ─── Design tokens (mirrored as Tailwind arbitrary values where needed) ────────
 // Primary:   amber-800 / amber-600 / amber-400  (savanna gold)
@@ -33,13 +43,6 @@ function useSection() {
 }
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
-
-const STATS = [
-  { value: "500+", label: "Happy Travelers" },
-  { value: "12+", label: "Destinations" },
-  { value: "8", label: "Safari Packages" },
-  { value: "24/7", label: "Support" },
-];
 
 const SERVICES = [
   {
@@ -166,89 +169,6 @@ const SERVICES = [
   },
 ];
 
-const DESTINATIONS = [
-  {
-    name: "Tsavo East",
-    tagline: "Red elephants & vast savanna",
-    img: "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80",
-    badge: "Most Popular",
-  },
-  {
-    name: "Amboseli",
-    tagline: "Kilimanjaro & elephant herds",
-    img: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&q=80",
-    badge: null,
-  },
-  {
-    name: "Diani Beach",
-    tagline: "White sand & turquoise coast",
-    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-    badge: "New",
-  },
-  {
-    name: "Maasai Mara",
-    tagline: "The Great Migration",
-    img: "https://images.unsplash.com/photo-1549366021-9f761d450615?w=800&q=80",
-    badge: null,
-  },
-];
-
-const PACKAGES = [
-  {
-    title: "3-Day Tsavo Safari",
-    duration: "3 Days / 2 Nights",
-    price: "From KES 28,000",
-    highlights: ["Game drives", "Mzima Springs", "Lugard Falls", "Bush camp"],
-    img: "https://images.unsplash.com/photo-1503197979108-c824168d51a8?w=600&q=80",
-  },
-  {
-    title: "5-Day Coast & Safari",
-    duration: "5 Days / 4 Nights",
-    price: "From KES 62,000",
-    highlights: ["Tsavo West", "Diani Beach", "Snorkeling", "SGR transfer"],
-    img: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80",
-  },
-  {
-    title: "Amboseli Weekend",
-    duration: "2 Days / 1 Night",
-    price: "From KES 18,500",
-    highlights: [
-      "Kilimanjaro view",
-      "Elephant plains",
-      "Sundowner",
-      "Lodge stay",
-    ],
-    img: "https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?w=600&q=80",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Amira Hassan",
-    role: "Family Trip, Mombasa",
-    quote:
-      "Savanna Crown made our family safari absolutely seamless. The Tsavo game drives were breathtaking and everything was perfectly organised from pick-up to lodge.",
-    avatar: "AH",
-    stars: 5,
-  },
-  {
-    name: "David Kimani",
-    role: "Corporate Retreat, Nairobi",
-    quote:
-      "We brought 40 staff members for a company retreat. The team handled every detail — transfers, accommodation, catering, and activities. Highly professional.",
-    avatar: "DK",
-    stars: 5,
-  },
-  {
-    name: "Sophie Laurent",
-    role: "Solo Traveler, France",
-    quote:
-      "I was traveling solo and they made me feel completely safe and welcomed. The Diani beach package was dreamy. I will definitely be back!",
-    avatar: "SL",
-    stars: 5,
-  },
-];
-
 // ─── Shared primitives ─────────────────────────────────────────────────────────
 
 function SectionLabel({ children }) {
@@ -260,22 +180,6 @@ function SectionLabel({ children }) {
   );
 }
 
-function StarRating({ count = 5 }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: count }).map((_, i) => (
-        <svg
-          key={i}
-          className="h-4 w-4 text-amber-400"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 // ─── Section: Hero ─────────────────────────────────────────────────────────────
 
@@ -342,19 +246,34 @@ function Hero() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {["Services", "Destinations", "Packages", "About"].map((item) => (
-            <Link
-              key={item}
-              to={`/${item.toLowerCase()}`}
-              className="text-sm font-medium text-stone-200 transition-colors hover:text-amber-400"
-            >
-              {item}
-            </Link>
-          ))}
+          {[
+            { label: "Services", to: "#services" },
+            { label: "Destinations", to: "/destinations" },
+            { label: "Packages", to: "/packages" },
+            { label: "Inquire", to: "/inquiry" },
+          ].map((item) =>
+            item.to.startsWith("#") ? (
+              <a
+                key={item.label}
+                href={item.to}
+                className="text-sm font-medium text-stone-200 transition-colors hover:text-amber-400"
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.label}
+                to={item.to}
+                className="text-sm font-medium text-stone-200 transition-colors hover:text-amber-400"
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
         </div>
 
         <Link
-          to="/book"
+          to="/dashboard/book/safari"
           className="rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-500 active:scale-95"
         >
           Book Now
@@ -411,8 +330,10 @@ function Hero() {
                 />
               </svg>
             </Link>
-            <Link
-              to="/contact"
+            <a
+              href="https://wa.me/254700000000"
+              target="_blank"
+              rel="noreferrer"
               className="flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
@@ -420,7 +341,7 @@ function Hero() {
                 <path d="M11.5 0C5.149 0 0 5.149 0 11.5c0 2.049.541 3.972 1.487 5.638L0 23l6.073-1.462A11.45 11.45 0 0011.5 23C17.851 23 23 17.851 23 11.5S17.851 0 11.5 0zm0 21.046a9.513 9.513 0 01-4.86-1.332l-.35-.207-3.604.867.9-3.508-.228-.361A9.518 9.518 0 011.954 11.5c0-5.267 4.279-9.546 9.546-9.546S21.046 6.233 21.046 11.5s-4.279 9.546-9.546 9.546z" />
               </svg>
               WhatsApp Us
-            </Link>
+            </a>
           </motion.div>
         </motion.div>
       </div>
@@ -447,15 +368,23 @@ function Hero() {
 
 // ─── Section: Stats ────────────────────────────────────────────────────────────
 
-function Stats() {
+function Stats({ destinationsCount, packagesCount }) {
   const { ref, inView } = useSection();
+
+  const stats = [
+    { value: `${destinationsCount}+`, label: "Destinations" },
+    { value: String(packagesCount), label: "Safari Packages" },
+    { value: "24/7", label: "Support" },
+    { value: "100%", label: "Tailor-Made" },
+  ];
+
   return (
     <section ref={ref} className="relative bg-amber-600 py-16">
       {/* Diagonal edge top */}
-      <div className="absolute -top-8 left-0 right-0 h-8 bg-amber-600 [clip-path:polygon(0_100%,100%_100%,100%_0)]" />
+      <div className="diagonal-edge absolute -top-8 left-0 right-0 h-8 bg-amber-600" />
 
       <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 px-6 md:grid-cols-4 md:px-12">
-        {STATS.map((s, i) => (
+        {stats.map((s, i) => (
           <motion.div
             key={s.label}
             custom={i}
@@ -482,7 +411,11 @@ function Stats() {
 function Services() {
   const { ref, inView } = useSection();
   return (
-    <section ref={ref} className="bg-stone-50 py-24 dark:bg-stone-950">
+    <section
+      id="services"
+      ref={ref}
+      className="bg-stone-50 py-24 dark:bg-stone-950"
+    >
       <div className="mx-auto max-w-6xl px-6 md:px-12">
         <motion.div
           custom={0}
@@ -533,9 +466,11 @@ function Services() {
 
 // ─── Section: Featured Destinations ───────────────────────────────────────────
 
-function FeaturedDestinations() {
+function FeaturedDestinations({ destinations }) {
   const { ref, inView } = useSection();
   const [active, setActive] = useState(0);
+
+  if (!destinations.length) return null;
 
   return (
     <section ref={ref} className="bg-stone-900 py-24">
@@ -584,9 +519,9 @@ function FeaturedDestinations() {
           animate={inView ? "visible" : "hidden"}
           className="hidden grid-cols-4 gap-3 lg:grid"
         >
-          {DESTINATIONS.map((dest, i) => (
+          {destinations.map((dest, i) => (
             <div
-              key={dest.name}
+              key={dest.id}
               onMouseEnter={() => setActive(i)}
               className={[
                 "group relative cursor-pointer overflow-hidden rounded-2xl transition-all duration-500",
@@ -595,14 +530,14 @@ function FeaturedDestinations() {
               style={{ height: 420 }}
             >
               <img
-                src={dest.img}
+                src={dest.heroImage}
                 alt={dest.name}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/20 to-transparent" />
-              {dest.badge && (
+              {dest.featured && (
                 <span className="absolute left-4 top-4 rounded-full bg-amber-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
-                  {dest.badge}
+                  Featured
                 </span>
               )}
               <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -617,7 +552,7 @@ function FeaturedDestinations() {
                   ].join(" ")}
                 >
                   <Link
-                    to="/destinations"
+                    to={`/destinations/${dest.slug}`}
                     className="inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-amber-500"
                   >
                     Explore <span>→</span>
@@ -630,21 +565,22 @@ function FeaturedDestinations() {
 
         {/* Mobile: vertical stack */}
         <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
-          {DESTINATIONS.map((dest) => (
-            <div
-              key={dest.name}
-              className="group relative overflow-hidden rounded-2xl"
+          {destinations.map((dest) => (
+            <Link
+              key={dest.id}
+              to={`/destinations/${dest.slug}`}
+              className="group relative block overflow-hidden rounded-2xl"
               style={{ height: 260 }}
             >
               <img
-                src={dest.img}
+                src={dest.heroImage}
                 alt={dest.name}
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 to-transparent" />
-              {dest.badge && (
+              {dest.featured && (
                 <span className="absolute left-4 top-4 rounded-full bg-amber-600 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
-                  {dest.badge}
+                  Featured
                 </span>
               )}
               <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -653,7 +589,7 @@ function FeaturedDestinations() {
                 </p>
                 <p className="text-sm text-stone-300">{dest.tagline}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -663,8 +599,11 @@ function FeaturedDestinations() {
 
 // ─── Section: Featured Packages ────────────────────────────────────────────────
 
-function FeaturedPackages() {
+function FeaturedPackages({ packages }) {
   const { ref, inView } = useSection();
+
+  if (!packages.length) return null;
+
   return (
     <section ref={ref} className="bg-stone-50 py-24 dark:bg-stone-950">
       <div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -705,81 +644,87 @@ function FeaturedPackages() {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {PACKAGES.map((pkg, i) => (
-            <motion.article
-              key={pkg.title}
-              custom={i}
-              variants={fadeUp}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl dark:border-stone-800 dark:bg-stone-900"
-            >
-              {/* Image */}
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={pkg.img}
-                  alt={pkg.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/50 to-transparent" />
-                <span className="absolute bottom-4 left-4 rounded-full bg-amber-600/90 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
-                  {pkg.duration}
-                </span>
-              </div>
+          {packages.map((pkg, i) => {
+            const minPrice = getMinPrice(pkg.pricing);
 
-              {/* Body */}
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-stone-50">
-                  {pkg.title}
-                </h3>
+            return (
+              <motion.article
+                key={pkg.id}
+                custom={i}
+                variants={fadeUp}
+                initial="hidden"
+                animate={inView ? "visible" : "hidden"}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl dark:border-stone-800 dark:bg-stone-900"
+              >
+                {/* Image */}
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={pkg.hero_image}
+                    alt={pkg.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/50 to-transparent" />
+                  <span className="absolute bottom-4 left-4 rounded-full bg-amber-600/90 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                    {formatDuration(pkg.duration_days)}
+                  </span>
+                </div>
 
-                <ul className="mt-4 flex flex-col gap-2">
-                  {pkg.highlights.map((h) => (
-                    <li
-                      key={h}
-                      className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-400"
-                    >
-                      <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                        <svg
-                          className="h-3 w-3 text-emerald-600 dark:text-emerald-400"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path
-                            d="M2 6l3 3 5-5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                      {h}
-                    </li>
-                  ))}
-                </ul>
+                {/* Body */}
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-stone-50">
+                    {pkg.title}
+                  </h3>
 
-                <div className="mt-auto pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-stone-400">
-                        Starting from
-                      </p>
-                      <p className="font-serif text-xl font-bold text-amber-600 dark:text-amber-400">
-                        {pkg.price}
-                      </p>
+                  <ul className="mt-4 flex flex-col gap-2">
+                    {(pkg.highlights || []).slice(0, 4).map((h) => (
+                      <li
+                        key={h}
+                        className="flex items-center gap-2 text-sm text-stone-600 dark:text-stone-400"
+                      >
+                        <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+                          <svg
+                            className="h-3 w-3 text-emerald-600 dark:text-emerald-400"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path
+                              d="M2 6l3 3 5-5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-auto pt-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-stone-400">
+                          Starting from
+                        </p>
+                        <p className="font-serif text-xl font-bold text-amber-600 dark:text-amber-400">
+                          {minPrice
+                            ? `From ${formatCurrency(minPrice.price, minPrice.currency)}`
+                            : "Price on request"}
+                        </p>
+                      </div>
+                      <Link
+                        to={`/dashboard/book/safari?package=${pkg.slug}`}
+                        className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-600 active:scale-95 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-amber-500"
+                      >
+                        Book
+                      </Link>
                     </div>
-                    <Link
-                      to="/book"
-                      className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-600 active:scale-95 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-amber-500"
-                    >
-                      Book
-                    </Link>
                   </div>
                 </div>
-              </div>
-            </motion.article>
-          ))}
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -817,34 +762,7 @@ function Testimonials() {
           </h2>
         </motion.div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.div
-              key={t.name}
-              custom={i}
-              variants={fadeUp}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              className="flex flex-col gap-5 rounded-2xl border border-amber-800/50 bg-amber-900/40 p-7 backdrop-blur-sm"
-            >
-              <StarRating count={t.stars} />
-              <p className="text-base leading-relaxed text-amber-100">
-                "{t.quote}"
-              </p>
-              <div className="mt-auto flex items-center gap-3 border-t border-amber-800/40 pt-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-700 text-sm font-bold text-amber-100">
-                  {t.avatar}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-amber-50">
-                    {t.name}
-                  </p>
-                  <p className="text-xs text-amber-400">{t.role}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <HomepageReviewsCarousel />
       </div>
     </section>
   );
@@ -854,21 +772,7 @@ function Testimonials() {
 
 function InquiryCta() {
   const { ref, inView } = useSection();
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
-
-  function handleChange(e) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
-    setSubmitted(true);
-  }
-
-  const inputCls =
-    "w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition-all focus:border-amber-500 focus:ring-2 focus:ring-amber-200 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-50 dark:placeholder:text-stone-500 dark:focus:ring-amber-800/40";
 
   return (
     <section ref={ref} className="bg-stone-50 py-24 dark:bg-stone-950">
@@ -927,7 +831,7 @@ function InquiryCta() {
 
             {/* WhatsApp CTA */}
             <a
-              href="https://wa.me/254000000000"
+              href="https://wa.me/254700000000"
               target="_blank"
               rel="noreferrer"
               className="inline-flex w-fit items-center gap-3 rounded-full bg-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/20 transition-all hover:bg-emerald-500 active:scale-95"
@@ -948,111 +852,21 @@ function InquiryCta() {
             animate={inView ? "visible" : "hidden"}
             className="rounded-2xl border border-stone-200 bg-white p-8 shadow-lg dark:border-stone-800 dark:bg-stone-900"
           >
-            <AnimatePresence mode="wait">
-              {submitted ? (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center gap-4 py-8 text-center"
-                >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                    <svg
-                      className="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        d="M5 13l4 4L19 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-stone-50">
-                      Inquiry received!
-                    </h3>
-                    <p className="mt-2 text-sm text-stone-500 dark:text-stone-400">
-                      Our team will reach out within 24 hours. Get ready for an
-                      adventure!
-                    </p>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.form
-                  key="form"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  onSubmit={handleSubmit}
-                  noValidate
-                  className="flex flex-col gap-5"
-                >
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-stone-50">
-                      Send an enquiry
-                    </h3>
-                    <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
-                      Tell us about your dream trip.
-                    </p>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
-                        Full Name
-                      </label>
-                      <input
-                        name="name"
-                        type="text"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Jane Smith"
-                        className={inputCls}
-                        autoComplete="name"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
-                        Email
-                      </label>
-                      <input
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="you@example.com"
-                        className={inputCls}
-                        autoComplete="email"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold uppercase tracking-widest text-stone-500 dark:text-stone-400">
-                      Message
-                    </label>
-                    <textarea
-                      name="message"
-                      rows={4}
-                      value={form.message}
-                      onChange={handleChange}
-                      placeholder="Tell us about your desired destination, group size, and travel dates…"
-                      className={`${inputCls} resize-none`}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full rounded-xl bg-amber-600 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-500 active:scale-[0.98] disabled:opacity-50"
-                  >
-                    Send Inquiry
-                  </button>
-                </motion.form>
-              )}
-            </AnimatePresence>
+            {submitted ? (
+              <InquirySuccessMessage />
+            ) : (
+              <div>
+                <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-stone-50">
+                  Send an enquiry
+                </h3>
+                <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+                  Tell us about your dream trip.
+                </p>
+                <div className="mt-5">
+                  <InquiryForm onSuccess={() => setSubmitted(true)} />
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
@@ -1115,39 +929,49 @@ function Footer() {
             </p>
             <ul className="flex flex-col gap-2.5">
               {[
-                "About Us",
-                "Services",
-                "Destinations",
-                "Packages",
-                "Contact",
+                { label: "Services", to: "#services" },
+                { label: "Destinations", to: "/destinations" },
+                { label: "Packages", to: "/packages" },
+                { label: "Reviews", to: "/reviews" },
+                { label: "Contact", to: "/inquiry" },
               ].map((l) => (
-                <li key={l}>
-                  <Link
-                    to={`/${l.toLowerCase().replace(" ", "-")}`}
-                    className="text-sm text-stone-400 transition-colors hover:text-amber-400"
-                  >
-                    {l}
-                  </Link>
+                <li key={l.label}>
+                  {l.to.startsWith("#") ? (
+                    <a
+                      href={l.to}
+                      className="text-sm text-stone-400 transition-colors hover:text-amber-400"
+                    >
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={l.to}
+                      className="text-sm text-stone-400 transition-colors hover:text-amber-400"
+                    >
+                      {l.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Contact */}
           <div>
             <p className="mb-4 text-xs font-bold uppercase tracking-widest text-stone-400">
-              Follow Us
+              Contact
             </p>
-            <div className="flex flex-col gap-2.5">
-              {["Facebook", "Instagram", "TikTok", "YouTube"].map((s) => (
-                <a
-                  key={s}
-                  href="#"
-                  className="text-sm text-stone-400 transition-colors hover:text-amber-400"
-                >
-                  {s}
-                </a>
-              ))}
+            <div className="flex flex-col gap-2.5 text-sm text-stone-400">
+              <a
+                href="mailto:info@savannacrowntours.com"
+                className="hover:text-amber-400"
+              >
+                info@savannacrowntours.com
+              </a>
+              <a href="tel:+254700000000" className="hover:text-amber-400">
+                +254 700 000 000
+              </a>
+              <span>Voi Town, Taita Taveta County</span>
             </div>
           </div>
         </div>
@@ -1167,13 +991,25 @@ function Footer() {
 // ─── Page root ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const { data: featuredDestinations = [] } = useDestinations({
+    featured: true,
+    limit: 4,
+    orderBy: "updatedAt",
+    order: "desc",
+  });
+  const { data: packages = [] } = usePackages({ limit: 3 });
+  const { data: allDestinations = [] } = useDestinations();
+
   return (
     <div className="min-h-screen font-sans antialiased">
       <Hero />
-      <Stats />
+      <Stats
+        destinationsCount={allDestinations.length}
+        packagesCount={packages.length}
+      />
       <Services />
-      <FeaturedDestinations />
-      <FeaturedPackages />
+      <FeaturedDestinations destinations={featuredDestinations} />
+      <FeaturedPackages packages={packages} />
       <Testimonials />
       <InquiryCta />
       <Footer />

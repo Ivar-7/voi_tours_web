@@ -1,0 +1,110 @@
+rules_version = '2';
+
+// Authorization-focused rules — application code owns schema and business
+// logic (see .claude/CLAUDE.md). Cloud Functions write via the Admin SDK,
+// which bypasses these rules entirely, so collections written exclusively
+// by `firebase_functions/` (e.g. `payments`) are locked to read-only here.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function role() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && role() == 'admin';
+    }
+
+    function isAdminOrAgent() {
+      return isSignedIn() && (role() == 'admin' || role() == 'agent');
+    }
+
+    // ── Users ────────────────────────────────────────────────────────────
+    // Self-service profile + admin user management. Only admins may change
+    // role/tier/is_active — agents have no elevated access here, matching
+    // AdminUsersPage's `canManage` (admin-only) gate.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdminOrAgent();
+
+      allow create: if isOwner(uid)
+        && request.resource.data.role == 'customer'
+        && request.resource.data.is_active == true;
+
+      allow update: if isAdmin() || (
+        isOwner(uid) &&
+        request.resource.data.role == resource.data.role &&
+        request.resource.data.tier == resource.data.tier &&
+        request.resource.data.is_active == resource.data.is_active
+      );
+
+      allow delete: if false;
+    }
+
+    // ── Destinations & Packages ─────────────────────────────────────────
+    // Public catalogue. Packages are admin-only (AdminPackagesPage's
+    // `canManage`); destinations allow admin + agent (no such gate there).
+    match /destinations/{id} {
+      allow read: if true;
+      allow write: if isAdminOrAgent();
+    }
+
+    match /packages/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Bookings ─────────────────────────────────────────────────────────
+    // Customers create their own bookings and may only cancel them
+    // afterwards; admin/agent manage status + pricing.
+    match /bookings/{id} {
+      allow read: if isOwner(resource.data.user_id) || isAdminOrAgent();
+
+      allow create: if isSignedIn()
+        && request.resource.data.user_id == request.auth.uid;
+
+      allow update: if isAdminOrAgent() || (
+        isOwner(resource.data.user_id) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updated_at']) &&
+        request.resource.data.status == 'cancelled'
+      );
+
+      allow delete: if false;
+    }
+
+    // ── Payments ─────────────────────────────────────────────────────────
+    // Written exclusively by the PayHero Cloud Functions (Admin SDK).
+    // No client write path exists or should ever exist here.
+    match /payments/{id} {
+      allow read: if isOwner(resource.data.userId) || isAdminOrAgent();
+      allow write: if false;
+    }
+
+    // ── Inquiries ────────────────────────────────────────────────────────
+    // Public lead-capture form; only staff can read/triage.
+    match /inquiries/{id} {
+      allow create: if request.resource.data.is_converted == false
+        && request.resource.data.assigned_agent_id == null;
+      allow read, update: if isAdminOrAgent();
+      allow delete: if false;
+    }
+
+    // ── Reviews ──────────────────────────────────────────────────────────
+    // Anyone can read; only the signed-in author can create their own
+    // review; staff can moderate (e.g. unpublish/delete abusive content).
+    match /reviews/{id} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.user_id == request.auth.uid
+        && (request.resource.data.package_id != null || request.resource.data.destination_id != null);
+      allow update, delete: if isAdminOrAgent();
+    }
+  }
+}

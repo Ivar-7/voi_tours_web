@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { loginWithEmail, forgotPassword } from "../api/auth.api.js";
+import { loginWithEmail } from "../api/auth.api.js";
 
 // ─── Animation variants ───────────────────────────────────────────────────────
 
@@ -74,126 +74,6 @@ function InputField({
   );
 }
 
-function ForgotPasswordPanel({ onClose }) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const [errorMsg, setErrorMsg] = useState("");
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email) {
-      setErrorMsg("Please enter your email.");
-      return;
-    }
-    setStatus("loading");
-    setErrorMsg("");
-    try {
-      await forgotPassword(email);
-      setStatus("success");
-    } catch (err) {
-      setErrorMsg(err.message ?? "Something went wrong.");
-      setStatus("error");
-    }
-  }
-
-  return (
-    <motion.div
-      key="forgot"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col gap-6"
-    >
-      <div>
-        <button
-          onClick={onClose}
-          className="mb-4 flex items-center gap-1.5 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700 dark:hover:text-zinc-200"
-        >
-          <svg
-            className="h-3.5 w-3.5"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              d="M10 12L6 8l4-4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Back to sign in
-        </button>
-        <h2 className="font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-          Reset password
-        </h2>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          We'll send a reset link to your email address.
-        </p>
-      </div>
-
-      {status === "success" ? (
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-center dark:border-emerald-800 dark:bg-emerald-950/40">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
-            <svg
-              className="h-5 w-5 text-emerald-600 dark:text-emerald-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-            Check your inbox
-          </p>
-          <p className="text-xs text-emerald-600 dark:text-emerald-400">
-            If an account exists for <strong>{email}</strong>, a reset link is
-            on its way.
-          </p>
-        </div>
-      ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4"
-          noValidate
-        >
-          <InputField
-            id="reset-email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrorMsg("");
-            }}
-            error={status === "error" ? errorMsg : ""}
-            autoComplete="email"
-            placeholder="you@example.com"
-          />
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="relative w-full overflow-hidden rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            {status === "loading" ? (
-              <span className="flex items-center justify-center gap-2">
-                <Spinner /> Sending…
-              </span>
-            ) : (
-              "Send reset link"
-            )}
-          </button>
-        </form>
-      )}
-    </motion.div>
-  );
-}
-
 function Spinner({ size = "sm" }) {
   const cls = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   return (
@@ -244,7 +124,6 @@ export default function LoginPage() {
   const location = useLocation();
   const from = location.state?.from?.pathname ?? "/dashboard";
 
-  const [view, setView] = useState("login"); // 'login' | 'forgot'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -313,7 +192,7 @@ export default function LoginPage() {
             </svg>
           </div>
           <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Acme
+            Savanna Crown
           </span>
         </motion.div>
 
@@ -323,22 +202,13 @@ export default function LoginPage() {
           variants={fadeUp}
           className="rounded-2xl border border-zinc-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-md dark:border-zinc-800/70 dark:bg-zinc-900/80"
         >
-          <AnimatePresence mode="wait">
-            {view === "forgot" ? (
-              <ForgotPasswordPanel
-                key="forgot"
-                onClose={() => setView("login")}
-              />
-            ) : (
-              <motion.div
-                key="login"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="flex flex-col gap-6"
-              >
-                {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col gap-6"
+          >
+            {/* Header */}
                 <div>
                   <h1 className="font-display text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
                     Welcome back
@@ -406,13 +276,12 @@ export default function LoginPage() {
                       >
                         Password
                       </label>
-                      <button
-                        type="button"
-                        onClick={() => setView("forgot")}
+                      <Link
+                        to="/auth/forgot-password"
                         className="text-xs text-zinc-400 underline-offset-2 transition-colors hover:text-zinc-700 hover:underline dark:hover:text-zinc-200"
                       >
                         Forgot password?
-                      </button>
+                      </Link>
                     </div>
                     <div className="relative">
                       <input
@@ -522,15 +391,13 @@ export default function LoginPage() {
                 <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
                   Don't have an account?{" "}
                   <Link
-                    to="/register"
+                    to="/auth/register"
                     className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
                   >
                     Create one
                   </Link>
                 </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </motion.div>
         </motion.div>
 
         {/* Legal footer */}

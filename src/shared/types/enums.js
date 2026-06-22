@@ -52,6 +52,4 @@ export const PricingSeason = /** @type {const} */ ({
 /** @readonly */
 export const PaymentProvider = /** @type {const} */ ({
   MPESA: "mpesa",
-  STRIPE: "stripe",
-  BANK_TRANSFER: "bank_transfer",
 });

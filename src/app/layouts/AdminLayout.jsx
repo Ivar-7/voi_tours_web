@@ -3,6 +3,7 @@ import { useAuth } from "@features/auth/hooks/useAuth";
 import LoadingState from "@shared/components/feedback/LoadingState";
 import RouteProgress from "@shared/components/feedback/RouteProgress";
 import PageTransition from "@shared/components/layout/PageTransition";
+import { ThemeToggle } from "@shared/components/ui";
 
 const adminItems = [
   { to: "/admin/dashboard", label: "Dashboard" },
@@ -79,6 +80,7 @@ export default function AdminLayout() {
                   Bookings, users, inquiries, and packages
                 </p>
               </div>
+              <ThemeToggle />
               <Link
                 to="/dashboard"
                 className="rounded-full border border-stone-700 px-4 py-2 text-sm font-medium text-stone-200 transition-colors hover:bg-stone-800"
