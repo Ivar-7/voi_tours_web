@@ -25,7 +25,10 @@ export const functions = getFunctions(app);
 // Opt-in local emulator support (off by default) — lets `npm run dev` point
 // at `firebase emulators:start` instead of the real project, so local
 // testing never writes test data into production Firestore/Auth/Storage.
-if (import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATORS === "true") {
+if (
+  import.meta.env.DEV &&
+  import.meta.env.VITE_USE_FIREBASE_EMULATORS === "true"
+) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectStorageEmulator(storage, "127.0.0.1", 9199);

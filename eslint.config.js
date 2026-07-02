@@ -7,8 +7,9 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   // firebase_functions/ is a separate Node/TypeScript project with its own
   // ESLint setup (legacy .eslintrc.js, @typescript-eslint) — not part of
-  // this Vite/React app's lint config.
-  globalIgnores(['dist', 'firebase_functions']),
+  // this Vite/React app's lint config. firebase_admin/ is a set of
+  // one-off Node/CommonJS Admin SDK scripts (cleanup/seed), same reasoning.
+  globalIgnores(['dist', 'firebase_functions', 'firebase_admin']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [

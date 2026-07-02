@@ -20,6 +20,10 @@ export function normalizeError(error) {
     return error;
   }
 
+  // Log the real error for diagnosis — the AppError returned below only
+  // ever carries a sanitized, user-safe message.
+  console.error("[normalizeError]", error);
+
   let message = "An unexpected error occurred";
   let status = 500;
   let code = "UNKNOWN";
@@ -29,14 +33,16 @@ export function normalizeError(error) {
   if (error?.isAxiosError || error?.response) {
     const data = error.response?.data;
     status = error.response?.status || 500;
-    message = data?.message || data?.detail || error.message || message;
+    // Only trust a message the backend explicitly curated for display —
+    // never fall back to error.message, which can contain raw transport
+    // details (e.g. "Request failed with status code 500").
+    message = data?.message || data?.detail || message;
     code = data?.code || error.code || "API_ERROR";
     fieldErrors = data?.fieldErrors || data?.errors || {};
   }
   // 2. Handle Firebase Auth / Firestore Errors
   else if (error?.code) {
     code = error.code;
-    message = error.message || message;
 
     // Map common Firebase code structures
     switch (error.code) {
@@ -68,13 +74,13 @@ export function normalizeError(error) {
         message = "The requested resource was not found.";
         break;
       default:
+        // Unmapped Firebase/Firestore code — keep the generic fallback
+        // message rather than surfacing the raw internal error.message.
         status = 400;
     }
   }
-  // 3. Generic JS Errors
-  else if (error instanceof Error) {
-    message = error.message;
-  }
+  // 3. Generic JS Errors — keep the generic fallback message; the raw
+  // error.message may contain internals that shouldn't reach the UI.
 
   return new AppError(message, status, code, fieldErrors);
 }

@@ -32,20 +32,17 @@ export default class ErrorBoundary extends Component {
           <p style={{ fontWeight: 700, fontSize: "1.25rem" }}>
             Something went wrong
           </p>
-          <pre
+          <p
             style={{
-              fontSize: "0.75rem",
-              background: "#fef2f2",
-              color: "#b91c1c",
-              padding: "1rem",
-              borderRadius: "0.5rem",
-              maxWidth: "40rem",
-              overflowX: "auto",
-              whiteSpace: "pre-wrap",
+              fontSize: "0.875rem",
+              color: "#71717a",
+              maxWidth: "28rem",
+              textAlign: "center",
             }}
           >
-            {String(this.state.error)}
-          </pre>
+            We hit an unexpected error. Please reload the page — if this keeps
+            happening, contact support.
+          </p>
           <button
             onClick={() => window.location.reload()}
             style={{
