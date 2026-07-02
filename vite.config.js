@@ -18,5 +18,27 @@ export default defineConfig({
       '@config': resolve(__dirname, './src/config'),
     },
   },
+  build: {
+    rolldownOptions: {
+      output: {
+        // Split the heavyweight vendors out of the entry chunk — without
+        // this, firebase + react + framer-motion all land in one >700 kB
+        // index chunk that every visitor must download before first paint.
+        advancedChunks: {
+          groups: [
+            { name: 'firebase', test: /node_modules[\\/]@firebase[\\/]/ },
+            {
+              name: 'react-vendor',
+              test: /node_modules[\\/](react|react-dom|react-router|scheduler)[\\/]/,
+            },
+            {
+              name: 'framer-motion',
+              test: /node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
+  },
 });
 

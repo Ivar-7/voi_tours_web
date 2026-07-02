@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "react-router-dom";
 
@@ -31,7 +31,7 @@ export default function SafariBookingForm({ onSubmit }) {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = useForm({
@@ -45,9 +45,9 @@ export default function SafariBookingForm({ onSubmit }) {
     if (match) setValue("package_id", match.id, { shouldValidate: true });
   }, [packageSlug, packages, setValue]);
 
-  const packageId = watch("package_id");
-  const travelDate = watch("travel_date");
-  const partySize = Number(watch("party_size")) || 0;
+  const packageId = useWatch({ control, name: "package_id" });
+  const travelDate = useWatch({ control, name: "travel_date" });
+  const partySize = Number(useWatch({ control, name: "party_size" })) || 0;
 
   const selectedPackage = useMemo(
     () => packages.find((pkg) => pkg.id === packageId),

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useDestinations } from "@features/destinations/hooks/useDestinations";
@@ -38,8 +38,22 @@ const fadeIn = {
 
 function useSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  return { ref, inView };
+  const observed = useInView(ref, { once: true, margin: "400px" });
+  const [timedOut, setTimedOut] = useState(false);
+
+  useEffect(() => {
+    if (observed) return;
+    // Safety net: IntersectionObserver never fires for an element that
+    // never actually passes through the real viewport — an instant scroll
+    // jump (keyboard "End", an anchor link) or how full-page screenshot
+    // tools composite the page without truly scrolling through it can skip
+    // right past a section. With `once: true` that leaves it stuck at
+    // opacity 0 forever, so force a reveal shortly after mount regardless.
+    const timer = setTimeout(() => setTimedOut(true), 1200);
+    return () => clearTimeout(timer);
+  }, [observed]);
+
+  return { ref, inView: observed || timedOut };
 }
 
 // ─── Data ──────────────────────────────────────────────────────────────────────

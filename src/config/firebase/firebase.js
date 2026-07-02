@@ -3,7 +3,6 @@ import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
-import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -35,9 +34,17 @@ if (
   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }
 
-// Analytics only in production (browser support check required)
-export const analytics = isSupported().then((yes) =>
-  yes ? getAnalytics(app) : null,
-);
+// Analytics is loaded via dynamic import so the app never hard-depends on
+// it: ad blockers block the firebase/analytics chunk (rule "*_analytics.js"),
+// and with a static import that failure would crash the whole module graph
+// into a white screen. Resolves to null when blocked or unsupported.
+export const analytics = import("firebase/analytics")
+  .then(({ isSupported, getAnalytics }) =>
+    isSupported().then((yes) => (yes ? getAnalytics(app) : null)),
+  )
+  .catch((error) => {
+    console.warn("Analytics disabled (blocked or failed to load):", error);
+    return null;
+  });
 
 export default app;

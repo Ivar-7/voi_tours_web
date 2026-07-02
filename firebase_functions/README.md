@@ -100,7 +100,6 @@ PAYHERO_API_KEY=your_api_key
 PAYHERO_API_SECRET=your_api_secret
 PAYHERO_CHANNEL_ID=5466
 PAYHERO_CALLBACK_URL=https://your-tunnel-url/payheroCallback
-PAYHERO_CALLBACK_SECRET=some-long-random-string
 ```
 
 The emulator picks this up automatically.
@@ -115,7 +114,6 @@ firebase functions:secrets:set PAYHERO_API_KEY
 firebase functions:secrets:set PAYHERO_API_SECRET
 firebase functions:secrets:set PAYHERO_CHANNEL_ID
 firebase functions:secrets:set PAYHERO_CALLBACK_URL
-firebase functions:secrets:set PAYHERO_CALLBACK_SECRET
 ```
 
 | Variable                  | Description                                                            |

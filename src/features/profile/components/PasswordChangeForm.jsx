@@ -8,7 +8,6 @@ export default function PasswordChangeForm() {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm({
@@ -57,8 +56,8 @@ export default function PasswordChangeForm() {
         error={errors.confirm_new_password?.message}
         {...register("confirm_new_password", {
           required: "Required",
-          validate: (value) =>
-            value === watch("new_password") || "Passwords do not match.",
+          validate: (value, formValues) =>
+            value === formValues.new_password || "Passwords do not match.",
         })}
       />
       <Button type="submit" loading={isPending} className="self-start">
