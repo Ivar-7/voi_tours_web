@@ -18,7 +18,7 @@ import { formatCurrency, formatDate } from "@shared/utils";
 export default function RevenueChart({ data = [], isLoading = false }) {
   if (isLoading) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-2xl border border-stone-800 bg-stone-900/60 text-sm text-stone-500">
+      <div className="flex h-64 items-center justify-center rounded-2xl border border-stone-200 bg-white text-sm text-stone-500 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
         Loading revenue…
       </div>
     );
@@ -26,14 +26,14 @@ export default function RevenueChart({ data = [], isLoading = false }) {
 
   if (!data.length) {
     return (
-      <div className="flex h-64 items-center justify-center rounded-2xl border border-stone-800 bg-stone-900/60 text-sm text-stone-500">
+      <div className="flex h-64 items-center justify-center rounded-2xl border border-stone-200 bg-white text-sm text-stone-500 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
         No confirmed payments in this period yet.
       </div>
     );
   }
 
   return (
-    <div className="h-64 rounded-2xl border border-stone-800 bg-stone-900/60 p-4">
+    <div className="h-64 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

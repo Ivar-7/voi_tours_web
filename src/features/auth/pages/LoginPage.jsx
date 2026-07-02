@@ -87,8 +87,6 @@ function Spinner({ size = "sm" }) {
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname ?? "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,7 +121,7 @@ export default function LoginPage() {
     setStatus("loading");
     try {
       await loginWithEmail(email, password);
-      navigate(from, { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       setStatus("error");
       setServerError(err.message ?? "Sign in failed. Please try again.");

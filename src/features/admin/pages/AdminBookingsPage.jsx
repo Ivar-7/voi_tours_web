@@ -103,7 +103,7 @@ export default function AdminBookingsPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
           Operations
         </p>
-        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-50">
+        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
           Bookings
         </h1>
       </div>

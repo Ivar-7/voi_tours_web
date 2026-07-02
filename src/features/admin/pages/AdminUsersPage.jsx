@@ -43,11 +43,11 @@ export default function AdminUsersPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
           Accounts
         </p>
-        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-50">
+        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
           Users
         </h1>
         {!canManage ? (
-          <p className="mt-2 text-sm text-stone-400">
+          <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
             Read-only — only admins can change roles or deactivate accounts.
           </p>
         ) : null}

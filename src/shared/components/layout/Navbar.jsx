@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Menu,
@@ -12,12 +12,21 @@ import { useAuth } from "@features/auth/hooks/useAuth";
 import { logout } from "@features/auth/api/auth.api";
 import { ThemeToggle } from "@shared/components/ui";
 
-const navLinks = [
+const publicNavLinks = [
   { to: "/", label: "Home", exact: true },
   { to: "/destinations", label: "Destinations" },
   { to: "/packages", label: "Packages" },
   { to: "/reviews", label: "Reviews" },
   { to: "/inquiry", label: "Inquiry" },
+];
+
+const adminNavLinks = [
+  { to: "/admin/dashboard", label: "Dashboard", exact: true },
+  { to: "/admin/destinations", label: "Destinations" },
+  { to: "/admin/bookings", label: "Bookings" },
+  { to: "/admin/users", label: "Users" },
+  { to: "/admin/inquiries", label: "Inquiries" },
+  { to: "/admin/packages", label: "Packages" },
 ];
 
 function navLinkClass({ isActive }) {
@@ -32,8 +41,15 @@ function navLinkClass({ isActive }) {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { user, isAuthenticated } = useAuth();
   const canManage = ["admin", "agent"].includes(user?.role);
+  const isAdminRoute = pathname.startsWith("/admin");
+  const navLinks = isAdminRoute ? adminNavLinks : publicNavLinks;
+  const desktopNavClass = isAdminRoute
+    ? "hidden items-center gap-4 lg:flex"
+    : "hidden items-center gap-7 md:flex";
+  const mobileOnlyClass = isAdminRoute ? "lg:hidden" : "md:hidden";
 
   const initials = useMemo(() => {
     const name = user?.full_name || user?.email || "Guest";
@@ -53,7 +69,10 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/40 bg-white/85 backdrop-blur-xl dark:border-stone-800 dark:bg-stone-950/85">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-3">
+        <Link
+          to={isAdminRoute ? "/admin/dashboard" : "/"}
+          className="flex items-center gap-3"
+        >
           <span className="flex h-11 w-11 items-center justify-center rounded-full border border-amber-500/20 bg-amber-600/10 text-amber-600 dark:text-amber-300">
             <svg
               className="h-5 w-5"
@@ -80,12 +99,12 @@ export default function Navbar() {
               Savanna Crown
             </p>
             <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-amber-700 dark:text-amber-300/80">
-              Tours & Travel
+              {isAdminRoute ? "Admin Console" : "Tours & Travel"}
             </p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex">
+        <nav className={desktopNavClass}>
           {navLinks.map((item) => (
             <NavLink
               key={item.to}
@@ -101,7 +120,14 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
-              {canManage ? (
+              {isAdminRoute ? (
+                <Link
+                  to="/"
+                  className="hidden rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-stone-800 dark:text-stone-300 dark:hover:text-amber-300 md:inline-flex"
+                >
+                  Site
+                </Link>
+              ) : canManage ? (
                 <Link
                   to="/admin"
                   className="hidden items-center gap-1.5 rounded-full border border-amber-500/40 px-4 py-2 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950/40 lg:inline-flex"
@@ -110,13 +136,15 @@ export default function Navbar() {
                   Admin
                 </Link>
               ) : null}
-              <Link
-                to="/dashboard"
-                className="hidden items-center gap-1.5 rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-stone-800 dark:text-stone-300 dark:hover:text-amber-300 md:inline-flex"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </Link>
+              {!isAdminRoute ? (
+                <Link
+                  to="/dashboard"
+                  className="hidden items-center gap-1.5 rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-stone-800 dark:text-stone-300 dark:hover:text-amber-300 md:inline-flex"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </Link>
+              ) : null}
               <button
                 type="button"
                 onClick={handleLogout}
@@ -124,13 +152,15 @@ export default function Navbar() {
               >
                 Sign out
               </button>
-              <Link
-                to="/dashboard/profile"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800 transition-transform hover:scale-105 dark:bg-amber-950/50 dark:text-amber-200"
-                aria-label="Your profile"
-              >
-                {initials || <UserCircle2 className="h-5 w-5" />}
-              </Link>
+              {!isAdminRoute ? (
+                <Link
+                  to="/dashboard/profile"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800 transition-transform hover:scale-105 dark:bg-amber-950/50 dark:text-amber-200"
+                  aria-label="Your profile"
+                >
+                  {initials || <UserCircle2 className="h-5 w-5" />}
+                </Link>
+              ) : null}
             </>
           ) : (
             <Link
@@ -146,7 +176,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 text-stone-700 transition-colors hover:bg-stone-100 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-900 md:hidden"
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 text-stone-700 transition-colors hover:bg-stone-100 dark:border-stone-800 dark:text-stone-200 dark:hover:bg-stone-900 ${mobileOnlyClass}`}
             aria-label="Toggle navigation menu"
             aria-expanded={mobileOpen}
           >
@@ -160,7 +190,9 @@ export default function Navbar() {
       </div>
 
       {mobileOpen ? (
-        <div className="border-t border-stone-200 bg-white px-4 py-4 dark:border-stone-800 dark:bg-stone-950 md:hidden">
+        <div
+          className={`border-t border-stone-200 bg-white px-4 py-4 dark:border-stone-800 dark:bg-stone-950 ${mobileOnlyClass}`}
+        >
           <nav className="mx-auto flex max-w-7xl flex-col gap-3">
             {navLinks.map((item) => (
               <NavLink
@@ -176,7 +208,15 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <>
-                {canManage ? (
+                {isAdminRoute ? (
+                  <Link
+                    to="/"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-900"
+                  >
+                    Site
+                  </Link>
+                ) : canManage ? (
                   <Link
                     to="/admin"
                     onClick={() => setMobileOpen(false)}
@@ -185,13 +225,15 @@ export default function Navbar() {
                     Admin console
                   </Link>
                 ) : null}
-                <Link
-                  to="/dashboard"
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-2xl px-4 py-3 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-900"
-                >
-                  Dashboard
-                </Link>
+                {!isAdminRoute ? (
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-900"
+                  >
+                    Dashboard
+                  </Link>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => {

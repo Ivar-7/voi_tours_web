@@ -200,7 +200,7 @@ function Hero() {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   return (
-    <section className="relative flex min-h-screen flex-col overflow-hidden">
+    <section className="relative flex min-h-[72vh] flex-col overflow-hidden lg:min-h-[66vh]">
       {/* Background image */}
       <div className="absolute inset-0">
         <img
@@ -216,14 +216,6 @@ function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-stone-950/70 via-stone-950/40 to-stone-950/80" />
         <div className="absolute inset-0 bg-gradient-to-r from-stone-950/60 to-transparent" />
       </div>
-
-      {/* Decorative grain */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-        }}
-      />
 
       {/* Hero content */}
       <div className="relative z-10 flex flex-1 flex-col justify-center px-6 pb-24 pt-12 md:px-12 lg:px-20">
@@ -290,23 +282,6 @@ function Hero() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2"
-      >
-        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone-400">
-          Scroll
-        </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-          className="h-8 w-px bg-gradient-to-b from-stone-400 to-transparent"
-        />
-      </motion.div>
     </section>
   );
 }
@@ -326,7 +301,7 @@ function Stats({ destinationsCount, packagesCount }) {
   return (
     <section ref={ref} className="relative bg-amber-600 py-16">
       {/* Diagonal edge top */}
-      <div className="diagonal-edge absolute -top-8 left-0 right-0 h-8 bg-amber-600" />
+      <div className="diagonal-edge absolute left-0 right-0 top-0 h-8 bg-amber-600" />
 
       <div className="mx-auto grid max-w-5xl grid-cols-2 gap-8 px-6 md:grid-cols-4 md:px-12">
         {stats.map((s, i) => (
@@ -948,12 +923,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen font-sans antialiased">
       <Hero />
+      <Services />
+      <FeaturedDestinations destinations={featuredDestinations} />
       <Stats
         destinationsCount={allDestinations.length}
         packagesCount={packages.length}
       />
-      <Services />
-      <FeaturedDestinations destinations={featuredDestinations} />
       <FeaturedPackages packages={packages} />
       <Testimonials />
       <InquiryCta />

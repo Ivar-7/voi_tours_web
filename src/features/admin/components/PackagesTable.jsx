@@ -10,11 +10,11 @@ import {
 
 function TableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone-800">
+    <div className="overflow-hidden rounded-2xl border border-stone-200 dark:border-stone-800">
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={index}
-          className="h-16 animate-pulse border-b border-stone-800 bg-stone-900/60 last:border-b-0"
+          className="h-16 animate-pulse border-b border-stone-200 bg-stone-100 last:border-b-0 dark:border-stone-800 dark:bg-stone-900/60"
         />
       ))}
     </div>
@@ -52,9 +52,9 @@ export default function PackagesTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-stone-800">
+    <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-transparent">
       <table className="min-w-full text-sm">
-        <thead className="bg-stone-900 text-left text-xs uppercase tracking-[0.15em] text-stone-400">
+        <thead className="bg-stone-100 text-left text-xs uppercase tracking-[0.15em] text-stone-500 dark:bg-stone-900 dark:text-stone-400">
           <tr>
             <th className="px-4 py-3">Package</th>
             <th className="px-4 py-3">Destinations</th>
@@ -74,13 +74,17 @@ export default function PackagesTable({
             return (
               <tr
                 key={pkg.id}
-                className="border-t border-stone-800 bg-stone-950/40 text-stone-200"
+                className="border-t border-stone-200 bg-white text-stone-700 dark:border-stone-800 dark:bg-stone-950/40 dark:text-stone-200"
               >
                 <td className="px-4 py-4">
-                  <p className="font-semibold text-stone-50">{pkg.title}</p>
-                  <p className="mt-1 text-xs text-stone-500">/{pkg.slug}</p>
+                  <p className="font-semibold text-stone-900 dark:text-stone-50">
+                    {pkg.title}
+                  </p>
+                  <p className="mt-1 text-xs text-stone-500 dark:text-stone-500">
+                    /{pkg.slug}
+                  </p>
                 </td>
-                <td className="px-4 py-4 text-stone-400">
+                <td className="px-4 py-4 text-stone-500 dark:text-stone-400">
                   {(pkg.destinations || []).length
                     ? pkg.destinations
                         .map((stop) => stop.name || stop.destination_id)
@@ -101,7 +105,7 @@ export default function PackagesTable({
                         "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
                         pkg.is_active
                           ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
-                          : "bg-stone-800 text-stone-400 hover:bg-stone-700",
+                          : "bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700",
                       ].join(" ")}
                     >
                       {togglingId === pkg.id
@@ -116,7 +120,7 @@ export default function PackagesTable({
                         "rounded-full px-3 py-1 text-xs font-semibold",
                         pkg.is_active
                           ? "bg-emerald-500/20 text-emerald-300"
-                          : "bg-stone-800 text-stone-400",
+                          : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400",
                       ].join(" ")}
                     >
                       {pkg.is_active ? "Active" : "Inactive"}
@@ -127,14 +131,14 @@ export default function PackagesTable({
                   <div className="flex items-center justify-end gap-2">
                     <Link
                       to={`/admin/packages/${pkg.id}`}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-700 text-stone-300 transition-colors hover:border-amber-500 hover:text-amber-300"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-amber-500 hover:text-amber-600 dark:border-stone-700 dark:text-stone-300 dark:hover:text-amber-300"
                       title="View by ID"
                     >
                       <Eye className="h-4 w-4" />
                     </Link>
                     <Link
                       to={`/packages/${pkg.slug}`}
-                      className="rounded-full border border-stone-700 px-3 py-1.5 text-xs font-semibold text-stone-300 transition-colors hover:border-amber-500 hover:text-amber-300"
+                      className="rounded-full border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-600 transition-colors hover:border-amber-500 hover:text-amber-600 dark:border-stone-700 dark:text-stone-300 dark:hover:text-amber-300"
                     >
                       Public
                     </Link>
@@ -143,7 +147,7 @@ export default function PackagesTable({
                         <button
                           type="button"
                           onClick={() => onEdit?.(pkg)}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-700 text-stone-300 transition-colors hover:border-amber-500 hover:text-amber-300"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition-colors hover:border-amber-500 hover:text-amber-600 dark:border-stone-700 dark:text-stone-300 dark:hover:text-amber-300"
                           title="Edit"
                         >
                           <Pencil className="h-4 w-4" />

@@ -10,9 +10,9 @@ const VARIANTS = {
  */
 export default function StatsCard({ label, value, icon, variant = "amber" }) {
   return (
-    <div className="rounded-2xl border border-stone-800 bg-stone-900/60 p-5">
+    <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-500">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-500 dark:text-stone-500">
           {label}
         </p>
         {icon ? (
@@ -23,7 +23,7 @@ export default function StatsCard({ label, value, icon, variant = "amber" }) {
           </span>
         ) : null}
       </div>
-      <p className="mt-3 font-serif text-3xl font-bold text-stone-50">
+      <p className="mt-3 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
         {value}
       </p>
     </div>

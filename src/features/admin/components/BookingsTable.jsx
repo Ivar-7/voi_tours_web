@@ -6,11 +6,11 @@ import BookingStatusUpdater from "./BookingStatusUpdater";
 
 function TableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone-800">
+    <div className="overflow-hidden rounded-2xl border border-stone-200 dark:border-stone-800">
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={index}
-          className="h-16 animate-pulse border-b border-stone-800 bg-stone-900/60 last:border-b-0"
+          className="h-16 animate-pulse border-b border-stone-200 bg-stone-100 last:border-b-0 dark:border-stone-800 dark:bg-stone-900/60"
         />
       ))}
     </div>
@@ -46,9 +46,9 @@ export default function BookingsTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-stone-800">
+    <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-transparent">
       <table className="min-w-full text-sm">
-        <thead className="bg-stone-900 text-left text-xs uppercase tracking-[0.15em] text-stone-400">
+        <thead className="bg-stone-100 text-left text-xs uppercase tracking-[0.15em] text-stone-500 dark:bg-stone-900 dark:text-stone-400">
           <tr>
             <th className="px-4 py-3">Booking</th>
             <th className="px-4 py-3">Customer</th>
@@ -63,12 +63,12 @@ export default function BookingsTable({
           {bookings.map((booking) => (
             <tr
               key={booking.id}
-              className="border-t border-stone-800 bg-stone-950/40 text-stone-200"
+              className="border-t border-stone-200 bg-white text-stone-700 dark:border-stone-800 dark:bg-stone-950/40 dark:text-stone-200"
             >
-              <td className="px-4 py-4 font-mono text-xs text-stone-400">
+              <td className="px-4 py-4 font-mono text-xs text-stone-500 dark:text-stone-400">
                 {booking.id}
               </td>
-              <td className="px-4 py-4 font-mono text-xs text-stone-400">
+              <td className="px-4 py-4 font-mono text-xs text-stone-500 dark:text-stone-400">
                 {booking.user_id}
               </td>
               <td className="px-4 py-4">{formatServiceType(booking.type)}</td>
@@ -85,13 +85,13 @@ export default function BookingsTable({
                   <button
                     type="button"
                     onClick={() => onSetPrice?.(booking)}
-                    className="rounded-full border border-amber-500/40 px-3 py-1 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/10"
+                    className="rounded-full border border-amber-500/40 px-3 py-1 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-500/10 dark:text-amber-300"
                   >
                     Set price
                   </button>
                 )}
               </td>
-              <td className="px-4 py-4 text-stone-400">
+              <td className="px-4 py-4 text-stone-500 dark:text-stone-400">
                 {formatDate(booking.created_at)}
               </td>
               <td className="px-4 py-4 text-right">

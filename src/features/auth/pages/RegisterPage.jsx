@@ -357,7 +357,7 @@ export default function RegisterPage() {
       });
       setStatus("success");
       // Give the success animation a moment before navigating
-      setTimeout(() => navigate("/dashboard", { replace: true }), 1800);
+      setTimeout(() => navigate("/", { replace: true }), 1800);
     } catch (err) {
       setStatus("error");
       setServerError(err.message ?? "Registration failed. Please try again.");

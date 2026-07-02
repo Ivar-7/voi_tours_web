@@ -34,10 +34,10 @@ export default function AdminDashboardPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
           Overview
         </p>
-        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-50">
+        <h1 className="mt-2 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
           Dashboard
         </h1>
-        <p className="mt-2 text-sm text-stone-400">
+        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
           A snapshot of bookings, revenue, and inquiries.
         </p>
       </div>
@@ -78,14 +78,14 @@ export default function AdminDashboardPage() {
       )}
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-stone-400">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-stone-600 dark:text-stone-400">
           Revenue (last 30 days)
         </h2>
         <RevenueChart data={revenue} isLoading={revenueLoading} />
       </div>
 
       <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-stone-400">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.15em] text-stone-600 dark:text-stone-400">
           Recent bookings
         </h2>
         <BookingsTable

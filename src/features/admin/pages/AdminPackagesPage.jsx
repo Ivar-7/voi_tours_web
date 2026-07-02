@@ -105,10 +105,10 @@ export default function AdminPackagesPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500">
             Inventory
           </p>
-          <h1 className="mt-2 font-serif text-3xl font-bold text-stone-50">
+          <h1 className="mt-2 font-serif text-3xl font-bold text-stone-900 dark:text-stone-50">
             Safari packages
           </h1>
-          <p className="mt-2 text-sm text-stone-400">
+          <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
             Create, edit, and publish curated safari itineraries.
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function AdminPackagesPage() {
               "rounded-full px-4 py-2 text-xs font-semibold transition-colors",
               statusFilter === option.value
                 ? "bg-amber-500 text-stone-950"
-                : "bg-stone-900 text-stone-300 hover:bg-stone-800",
+                : "bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-900 dark:text-stone-300 dark:hover:bg-stone-800",
             ].join(" ")}
           >
             {option.label}

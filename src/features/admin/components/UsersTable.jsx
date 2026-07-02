@@ -9,11 +9,11 @@ const ROLE_OPTIONS = Object.values(UserRole);
 
 function TableSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-stone-800">
+    <div className="overflow-hidden rounded-2xl border border-stone-200 dark:border-stone-800">
       {Array.from({ length: 5 }).map((_, index) => (
         <div
           key={index}
-          className="h-16 animate-pulse border-b border-stone-800 bg-stone-900/60 last:border-b-0"
+          className="h-16 animate-pulse border-b border-stone-200 bg-stone-100 last:border-b-0 dark:border-stone-800 dark:bg-stone-900/60"
         />
       ))}
     </div>
@@ -66,9 +66,9 @@ export default function UsersTable({
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-stone-800">
+    <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white shadow-sm dark:border-stone-800 dark:bg-transparent">
       <table className="min-w-full text-sm">
-        <thead className="bg-stone-900 text-left text-xs uppercase tracking-[0.15em] text-stone-400">
+        <thead className="bg-stone-100 text-left text-xs uppercase tracking-[0.15em] text-stone-500 dark:bg-stone-900 dark:text-stone-400">
           <tr>
             <th className="px-4 py-3">Name</th>
             <th className="px-4 py-3">Email</th>
@@ -83,13 +83,17 @@ export default function UsersTable({
           {users.map((user) => (
             <tr
               key={user.id}
-              className="border-t border-stone-800 bg-stone-950/40 text-stone-200"
+              className="border-t border-stone-200 bg-white text-stone-700 dark:border-stone-800 dark:bg-stone-950/40 dark:text-stone-200"
             >
-              <td className="px-4 py-4 font-medium text-stone-50">
+              <td className="px-4 py-4 font-medium text-stone-900 dark:text-stone-50">
                 {user.full_name || "—"}
               </td>
-              <td className="px-4 py-4 text-stone-400">{user.email}</td>
-              <td className="px-4 py-4 text-stone-400">{user.phone || "—"}</td>
+              <td className="px-4 py-4 text-stone-500 dark:text-stone-400">
+                {user.email}
+              </td>
+              <td className="px-4 py-4 text-stone-500 dark:text-stone-400">
+                {user.phone || "—"}
+              </td>
               <td className="px-4 py-4">{formatPassengerTier(user.tier)}</td>
               <td className="px-4 py-4">
                 {canManage ? (
@@ -97,7 +101,7 @@ export default function UsersTable({
                     value={user.role}
                     disabled={isPending}
                     onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                    className="rounded-full border border-stone-700 bg-stone-900 px-3 py-1.5 text-xs font-semibold text-stone-200 transition-colors hover:border-amber-500 disabled:opacity-60"
+                    className="rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 transition-colors hover:border-amber-500 disabled:opacity-60 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200"
                   >
                     {ROLE_OPTIONS.map((role) => (
                       <option key={role} value={role}>
@@ -106,7 +110,7 @@ export default function UsersTable({
                     ))}
                   </select>
                 ) : (
-                  <span className="rounded-full bg-stone-800 px-3 py-1 text-xs font-semibold text-stone-300">
+                  <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-semibold text-stone-600 dark:bg-stone-800 dark:text-stone-300">
                     {user.role}
                   </span>
                 )}
@@ -121,7 +125,7 @@ export default function UsersTable({
                       "rounded-full px-3 py-1 text-xs font-semibold transition-colors",
                       user.is_active
                         ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
-                        : "bg-stone-800 text-stone-400 hover:bg-stone-700",
+                        : "bg-stone-100 text-stone-500 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:hover:bg-stone-700",
                     ].join(" ")}
                   >
                     {user.is_active ? "Active" : "Inactive"}
@@ -132,14 +136,14 @@ export default function UsersTable({
                       "rounded-full px-3 py-1 text-xs font-semibold",
                       user.is_active
                         ? "bg-emerald-500/20 text-emerald-300"
-                        : "bg-stone-800 text-stone-400",
+                        : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400",
                     ].join(" ")}
                   >
                     {user.is_active ? "Active" : "Inactive"}
                   </span>
                 )}
               </td>
-              <td className="px-4 py-4 text-stone-400">
+              <td className="px-4 py-4 text-stone-500 dark:text-stone-400">
                 {formatDate(user.created_at)}
               </td>
             </tr>
