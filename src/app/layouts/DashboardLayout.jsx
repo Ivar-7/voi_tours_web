@@ -7,7 +7,7 @@ import Navbar from "@shared/components/layout/Navbar";
 
 const tabs = [
   { to: "/dashboard/bookings", label: "My Bookings" },
-  { to: "/dashboard/book/safari", label: "Book a Service" },
+  { to: "/dashboard/book", label: "Book a Service" },
   { to: "/dashboard/profile", label: "Profile" },
 ];
 

@@ -5,6 +5,7 @@ import {
   formatPassengerTier,
 } from "@shared/utils";
 import { ServiceType } from "@shared/types/enums";
+import { getBookingServiceMeta } from "../utils/bookingUi";
 
 const FIELD_CONFIG = {
   [ServiceType.SAFARI]: [
@@ -59,43 +60,65 @@ const FIELD_CONFIG = {
  */
 export default function BookingReview({ type, formData }) {
   const fields = FIELD_CONFIG[type] ?? [];
+  const meta = getBookingServiceMeta(type);
+  const Icon = meta.icon;
   const visibleFields = fields.filter((field) => {
     const value = formData?.[field.key];
     return value !== undefined && value !== null && value !== "";
   });
 
   return (
-    <div className="rounded-card border border-border bg-surface p-card-p">
-      <h3 className="text-sm font-semibold text-text-primary">
-        Review your details
-      </h3>
+    <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-stone-900/70">
+      <div className="flex items-start gap-3">
+        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${meta.accent}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+        <div>
+          <h3 className="text-sm font-semibold text-stone-950 dark:text-stone-50">
+            Review your details
+          </h3>
+          <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+            Confirm the {meta.shortLabel.toLowerCase()} request before sending
+            it to the operations team.
+          </p>
+        </div>
+      </div>
 
-      <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-        {visibleFields.map((field) => (
-          <div key={field.key}>
-            <dt className="text-xs uppercase tracking-wide text-text-muted">
-              {field.label}
-            </dt>
-            <dd className="mt-1 text-sm font-medium text-text-primary">
-              {field.format
-                ? field.format(formData[field.key])
-                : String(formData[field.key])}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {visibleFields.length ? (
+        <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+          {visibleFields.map((field) => (
+            <div
+              key={field.key}
+              className="rounded-xl bg-stone-50 p-4 dark:bg-stone-950/60"
+            >
+              <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">
+                {field.label}
+              </dt>
+              <dd className="mt-2 text-sm font-medium text-stone-950 dark:text-stone-50">
+                {field.format
+                  ? field.format(formData[field.key])
+                  : String(formData[field.key])}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p className="mt-5 rounded-xl bg-stone-50 p-4 text-sm text-stone-600 dark:bg-stone-950/60 dark:text-stone-400">
+          No request details are available yet.
+        </p>
+      )}
 
       {formData?.total_amount != null ? (
-        <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-          <span className="text-sm font-medium text-text-secondary">
+        <div className="mt-5 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+          <span className="text-sm font-medium text-emerald-900 dark:text-emerald-200">
             Estimated total
           </span>
-          <span className="text-lg font-semibold text-text-primary">
+          <span className="text-lg font-semibold text-emerald-950 dark:text-emerald-100">
             {formatCurrency(formData.total_amount, formData.currency)}
           </span>
         </div>
       ) : (
-        <p className="mt-5 border-t border-border pt-4 text-sm text-text-muted">
+        <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-200">
           We'll confirm the price once our team reviews this request.
         </p>
       )}

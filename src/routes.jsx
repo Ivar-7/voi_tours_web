@@ -161,6 +161,10 @@ const router = createBrowserRouter([
         path: "bookings/:id",
         element: withSuspense(<BookingDetailPage />, "dashboard"),
       },
+      {
+        path: "book",
+        element: withSuspense(<BookingPage />, "dashboard"),
+      },
       // :type = safari | sgr_transfer | hotel | event | delivery | flight
       {
         path: "book/:type",
