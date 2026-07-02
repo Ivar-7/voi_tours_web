@@ -1,0 +1,13 @@
+{
+  "name": "firebase_admin_scripts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "cleanup": "node firebase_cleanup/cleanup.js",
+    "seed": "node seed_data/seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.6.0"
+  }
+}

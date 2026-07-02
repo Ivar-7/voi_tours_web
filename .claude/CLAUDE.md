@@ -1,49 +1,30 @@
 # React + Vite + JavaScript — Agentic Rules
 
 ## Architecture
-* **`src/app/`** — Core application setup and global configuration.
-* **`src/shared/`** — Reusable primitives: `api`, `components`, `hooks`, `theme`, `types`, `utils`, `store`, `providers`.
-* **`src/features/<feature>/`** — Domain-driven modules: `api`, `services`, `hooks`, `widgets`, `pages`, `types`.
-* **Root Files** — `App.jsx`, `main.jsx`, `routes.jsx`.
-* **Directive** — Keep the codebase strictly modular, layered, and DRY.
-
----
+- **`src/app/`** — The authenticated app shell and layouts.
+- **`src/shared/`** — Reusable primitives: `api`, `components`, `hooks`, `layouts`, `types`, `utils`, `store`, `providers`.
+- **`src/features/<feature>/`** — Domain-driven modules, one folder per concern: `api/`, `types/`, `hooks/`, `widgets/`, `pages/`.
+- **Root Files** — `App.jsx`, `main.jsx`.
 
 ## Core Rules
-* **API Layer** — `src/shared/api/` manages the HTTP client, auth interceptors, and error normalization.
-* **Page Isolation** — `*Page.jsx` files act strictly as state/layout orchestrators. Fetch data, wire hooks, and pass props down to widgets.
-* **Naming Conventions** — Enforce exact patterns: `*.types.js`, `*.schema.js`, `*Provider.jsx`, `*Page.jsx`, `use<Feature>.js`.
-* **Routing** — Utilize object-based React Router configurations with route-level lazy loading.
-* **Error Handling** — Implement Error Boundaries combined with an `ErrorHandler` (strictly no UI stack traces).
-* **Security & Cleanliness** — Zero hardcoded secrets (maintain `.env.example`). No dead code or unjustified linter suppressions.
-* **Documentation** — Keep per-feature `README.md` files updated with every change.
-
----
-
-## Firebase
-
-- **Architecture**: Firebase app config and rules/indexes all live together in `src/config/firebase/` (`firebase.js`, `firestore.rules`, `firestore.indexes.json`, `storage.rules`); `firebase.json`/`.firebaserc` at the repo root point at them.
-- **Rules**: Authorization-focused rules. Application code manages schema and business logic.
-- **Performance**: Indexes deliberately small to keep cost/latency low.
-- **Deploy**: Deploy indexes and rules if changes, all indexes should be in firestore indexes.
-
----
+- **API Layer** — `src/shared/api/` owns the HTTP client and auth interceptors. Features call it via their own `api/<feature>.api.js`.
+- **Page Isolation** — Pages are state and layout orchestrators only.
+- **Naming Conventions** — `*.api.js`, `*.keys.js`, `*.types.js`, `*.schema.js`, `*Provider.jsx`, `*Page.jsx`, `use<Thing>.js`.
+- **Routing** — Object-based config (`src/app/routes.jsx`) with route-level lazy loading (`lazy:`, not `React.lazy` + `Suspense`).
+- **Firebase** — Config/rules/indexes in `src/config/firebase`; rules are authorization-only, indexes stay minimal, deploy on change.
+- **Error Handling** — One shared error-handling layer for the whole app. Never show raw errors to users; log the error itself.
+- **Security & Cleanliness** — No hardcoded secrets (maintain `.env.example`). No dead code, no linter suppressions.
+- **Documentation** — Minimal but clear README for each feature.
 
 ## UI/UX
-* **Design Tokens** — Use CSS variables/Tailwind classes only. **No arbitrary values** (e.g., no `h-[13px]`).
-* **Theming** — Full, seamless light/dark theme support.
-* **Motion** — Use Framer Motion exclusively for purposeful, UX-driven animations.
-* **Component States** — Every feature must explicitly handle 4 states: `loading`, `empty`, `success`, and `error`.
-* **Layouts** — Use reusable layouts mounted at the route level.
+- **Design Tokens** — Tailwind classes only. No arbitrary values.
+- **Theming** — Light/dark support everywhere.
+- **Motion** — Framer Motion only; animate with purpose.
+- **Component States** — Every feature handles 4 states: loading, empty, success, error.
+- **Layouts** — Mounted at the route level.
 
----
-
-## Verification Pipeline
-Run this sequence after every change before pushing code:
-
-```bash
-npm run format
-npm run lint
-npm run typecheck
-npm run build
-```
+## Mandatory Before Every Push
+- `npm run format`.
+- `npm run lint`.
+- `npm run build`.
+- Fix all warnings and errors;
