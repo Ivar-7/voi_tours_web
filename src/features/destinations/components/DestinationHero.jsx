@@ -33,38 +33,15 @@ export default function DestinationHero({ destination }) {
           <p className="mt-4 max-w-2xl text-base leading-7 text-stone-200 sm:text-lg">
             {destination.tagline}
           </p>
-          <p className="mt-6 max-w-2xl text-sm leading-7 text-stone-300">
-            {destination.description}
-          </p>
         </div>
 
-        <div className="grid gap-3 rounded-[1.5rem] border border-white/10 bg-white/10 p-5 backdrop-blur-md">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-stone-300">
-              Starting from
-            </p>
-            <p className="mt-1 font-serif text-3xl font-bold text-amber-300">
-              {price || "Contact us"}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-2xl bg-black/20 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-stone-400">
-                Region
-              </p>
-              <p className="mt-1 font-medium text-white">
-                {formatRegionLabel(destination.region)}
-              </p>
-            </div>
-            <div className="rounded-2xl bg-black/20 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-stone-400">
-                Slug
-              </p>
-              <p className="mt-1 truncate font-medium text-white">
-                {destination.slug}
-              </p>
-            </div>
-          </div>
+        <div className="rounded-[1.5rem] border border-stone-800 bg-stone-950 p-5 shadow-lg">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-stone-300">
+            Starting from
+          </p>
+          <p className="mt-1 font-serif text-3xl font-bold text-amber-400">
+            {price || "Contact us"}
+          </p>
         </div>
       </div>
     </section>

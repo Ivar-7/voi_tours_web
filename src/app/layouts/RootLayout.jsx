@@ -8,11 +8,8 @@ import RouteProgress from "@shared/components/feedback/RouteProgress";
 
 export default function RootLayout() {
   const { pathname } = useLocation();
-  const isPublicShell =
-    pathname !== "/" &&
-    !pathname.startsWith("/auth") &&
-    !pathname.startsWith("/dashboard") &&
-    !pathname.startsWith("/admin");
+  // HomePage renders its own footer, so the shared one is skipped there.
+  const showSharedFooter = pathname !== "/";
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,11 +18,11 @@ export default function RootLayout() {
   return (
     <div className="min-h-dvh">
       <RouteProgress />
-      {isPublicShell ? <Navbar /> : null}
+      <Navbar />
       <PageTransition>
         <Outlet />
       </PageTransition>
-      {isPublicShell ? <Footer /> : null}
+      {showSharedFooter ? <Footer /> : null}
     </div>
   );
 }

@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import Input from "@shared/components/ui/Input";
 import Button from "@shared/components/ui/Button";
 import { useUpdateProfile } from "../hooks/useUpdateProfile";
-import TierBadge from "./TierBadge";
 
 /**
  * @param {{ profile: import('@/shared/types/models').User }} props
@@ -32,25 +31,13 @@ export default function ProfileForm({ profile }) {
         <Input label="Phone" placeholder="07XXXXXXXX" {...register("phone")} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Input label="Email" value={profile.email} disabled readOnly />
-        <div>
-          <p className="mb-1.5 block text-sm font-medium text-text-primary">
-            Tier &amp; role
-          </p>
-          <div className="flex items-center gap-2">
-            <TierBadge tier={profile.tier} />
-            <span className="rounded-full bg-surface-raised px-3 py-1 text-sm font-medium text-text-secondary">
-              {profile.role}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <p className="text-xs text-text-muted">
-        Tier and role are set by our team — contact support if yours needs
-        updating.
-      </p>
+      <Input
+        label="Email"
+        value={profile.email}
+        disabled
+        readOnly
+        hint="Email can't be changed here."
+      />
 
       <Button type="submit" loading={isPending} className="self-start">
         Save changes

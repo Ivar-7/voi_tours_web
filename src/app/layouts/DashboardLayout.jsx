@@ -1,10 +1,15 @@
-import { Link, NavLink, Outlet, Navigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import LoadingState from "@shared/components/feedback/LoadingState";
 import RouteProgress from "@shared/components/feedback/RouteProgress";
 import PageTransition from "@shared/components/layout/PageTransition";
-import { ThemeToggle } from "@shared/components/ui";
-import { logout } from "@features/auth/api/auth.api";
+import Navbar from "@shared/components/layout/Navbar";
+
+const tabs = [
+  { to: "/dashboard/bookings", label: "My Bookings" },
+  { to: "/dashboard/book/safari", label: "Book a Service" },
+  { to: "/dashboard/profile", label: "Profile" },
+];
 
 const navLinkClass = ({ isActive }) =>
   [
@@ -29,66 +34,25 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-dvh bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50">
-      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/90 backdrop-blur dark:border-stone-800 dark:bg-stone-950/90">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-600 text-sm font-bold text-white">
-              SC
-            </span>
-            <span className="leading-tight">
-              <span className="block font-serif text-lg font-bold">
-                Savanna Crown
-              </span>
-              <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
-                Dashboard
-              </span>
-            </span>
-          </Link>
+      <Navbar />
 
-          <nav className="hidden items-center gap-2 md:flex">
-            <NavLink to="/dashboard/bookings" className={navLinkClass}>
-              My Bookings
-            </NavLink>
-            <NavLink to="/dashboard/book/safari" className={navLinkClass}>
-              Book a Service
-            </NavLink>
-            <NavLink to="/dashboard/profile" className={navLinkClass}>
-              Profile
-            </NavLink>
+      <div className="border-b border-stone-200/80 bg-white/70 dark:border-stone-800 dark:bg-stone-950/70">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <nav className="flex flex-wrap items-center gap-2">
+            {tabs.map((tab) => (
+              <NavLink key={tab.to} to={tab.to} className={navLinkClass}>
+                {tab.label}
+              </NavLink>
+            ))}
           </nav>
-
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-medium">{name}</p>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
-                Customer dashboard
-              </p>
-            </div>
-            <ThemeToggle />
-            <button
-              type="button"
-              onClick={logout}
-              className="rounded-full border border-stone-200 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-stone-300 hover:bg-stone-100 dark:border-stone-800 dark:text-stone-300 dark:hover:bg-stone-900"
-            >
-              Sign out
-            </button>
-          </div>
+          <p className="hidden text-xs text-stone-500 dark:text-stone-400 sm:block">
+            Signed in as <span className="font-medium">{name}</span>
+          </p>
         </div>
-      </header>
+      </div>
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <RouteProgress />
-        <div className="mb-6 flex flex-wrap gap-2 md:hidden">
-          <NavLink to="/dashboard/bookings" className={navLinkClass}>
-            My Bookings
-          </NavLink>
-          <NavLink to="/dashboard/book/safari" className={navLinkClass}>
-            Book a Service
-          </NavLink>
-          <NavLink to="/dashboard/profile" className={navLinkClass}>
-            Profile
-          </NavLink>
-        </div>
         <PageTransition>
           <Outlet />
         </PageTransition>

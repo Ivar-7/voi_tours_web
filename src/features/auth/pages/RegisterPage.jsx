@@ -5,15 +5,6 @@ import { registerWithEmail } from "../api/auth.api.js";
 
 // ─── Animation variants ───────────────────────────────────────────────────────
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
-
 const shake = {
   shake: {
     x: [0, -8, 8, -6, 6, -3, 3, 0],
@@ -74,7 +65,7 @@ function PasswordStrengthBar({ password }) {
             key={i}
             className={[
               "h-1 flex-1 rounded-full transition-all duration-300",
-              i < cfg.bars ? cfg.color : "bg-zinc-200 dark:bg-zinc-700",
+              i < cfg.bars ? cfg.color : "bg-stone-200 dark:bg-stone-700",
             ].join(" ")}
           />
         ))}
@@ -102,7 +93,7 @@ function InputField({
     <div className="flex flex-col gap-1.5">
       <label
         htmlFor={id}
-        className="text-xs font-medium tracking-widest uppercase text-zinc-500 dark:text-zinc-400"
+        className="text-xs font-medium tracking-widest uppercase text-stone-500 dark:text-stone-400"
       >
         {label}
       </label>
@@ -115,13 +106,13 @@ function InputField({
           autoComplete={autoComplete}
           placeholder={placeholder}
           className={[
-            "w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400",
+            "w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400",
             "outline-none transition-all duration-200",
-            "dark:text-zinc-100 dark:placeholder:text-zinc-600",
+            "dark:text-stone-100 dark:placeholder:text-stone-600",
             rightSlot ? "pr-11" : "",
             error
               ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
-              : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40",
+              : "border-stone-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200/60 dark:border-stone-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/40",
           ].join(" ")}
         />
         {rightSlot && (
@@ -131,7 +122,7 @@ function InputField({
         )}
       </div>
       {hint && !error && (
-        <p className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</p>
+        <p className="text-xs text-stone-400 dark:text-stone-500">{hint}</p>
       )}
       <AnimatePresence mode="wait">
         {error && (
@@ -156,7 +147,7 @@ function EyeToggle({ visible, onToggle }) {
       type="button"
       onClick={onToggle}
       aria-label={visible ? "Hide password" : "Show password"}
-      className="text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
+      className="text-stone-400 transition-colors hover:text-stone-600 dark:hover:text-stone-300"
     >
       {visible ? (
         <svg
@@ -215,28 +206,6 @@ function Spinner() {
   );
 }
 
-// ─── Decorative background (mirrors LoginPage) ────────────────────────────────
-
-function Background() {
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden
-    >
-      <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-violet-100/60 blur-3xl dark:bg-violet-950/40" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-sky-100/50 blur-3xl dark:bg-sky-950/30" />
-      <div
-        className="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-    </div>
-  );
-}
-
 // ─── Success state ────────────────────────────────────────────────────────────
 
 function SuccessPanel({ displayName }) {
@@ -273,15 +242,15 @@ function SuccessPanel({ displayName }) {
       </motion.div>
 
       <div>
-        <h2 className="font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h2 className="font-serif text-xl font-bold tracking-tight text-stone-900 dark:text-stone-50">
           Welcome{displayName ? `, ${displayName.split(" ")[0]}` : ""}!
         </h2>
-        <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1.5 text-sm text-stone-500 dark:text-stone-400">
           Your account has been created. Redirecting you now…
         </p>
       </div>
 
-      <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-600">
+      <div className="flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-600">
         <Spinner />
         <span>Setting up your workspace</span>
       </div>
@@ -398,424 +367,380 @@ export default function RegisterPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-zinc-50 px-4 py-16 dark:bg-zinc-950">
-      <Background />
+    <motion.div initial="hidden" animate="visible" className="w-full">
+      <AnimatePresence mode="wait">
+        {status === "success" ? (
+          <SuccessPanel key="success" displayName={displayName} />
+        ) : (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col gap-6"
+          >
+            {/* Header */}
+            <div>
+              <h1 className="font-serif text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-50">
+                Create an account
+              </h1>
+              <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+                Get started — it only takes a minute.
+              </p>
+            </div>
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 w-full max-w-md"
-      >
-        {/* Logo / wordmark */}
-        <motion.div
-          custom={0}
-          variants={fadeUp}
-          className="mb-8 flex items-center gap-2.5"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100">
-            <svg
-              className="h-4 w-4 text-white dark:text-zinc-900"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-            >
-              <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zM8 7a1 1 0 100 2 1 1 0 000-2z" />
-            </svg>
-          </div>
-          <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Savanna Crown
-          </span>
-        </motion.div>
-
-        {/* Panel */}
-        <motion.div
-          custom={1}
-          variants={fadeUp}
-          className="rounded-2xl border border-zinc-200/80 bg-white/80 p-8 shadow-sm backdrop-blur-md dark:border-zinc-800/70 dark:bg-zinc-900/80"
-        >
-          <AnimatePresence mode="wait">
-            {status === "success" ? (
-              <SuccessPanel key="success" displayName={displayName} />
-            ) : (
-              <motion.div
-                key="form"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="flex flex-col gap-6"
-              >
-                {/* Header */}
-                <div>
-                  <h1 className="font-display text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-                    Create an account
-                  </h1>
-                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    Get started — it only takes a minute.
+            {/* Server error banner */}
+            <AnimatePresence>
+              {status === "error" && serverError && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/60 dark:bg-red-950/40"
+                >
+                  <svg
+                    className="mt-0.5 h-4 w-4 shrink-0 text-red-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 012 0v3a1 1 0 01-2 0V9zm1 7a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 16z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <p className="text-sm text-red-700 dark:text-red-300">
+                    {serverError}
                   </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Form */}
+            <motion.form
+              onSubmit={handleSubmit}
+              noValidate
+              variants={
+                status === "error" && Object.keys(errors).length ? shake : {}
+              }
+              animate={
+                status === "error" && Object.keys(errors).length
+                  ? "shake"
+                  : undefined
+              }
+              className="flex flex-col gap-4"
+            >
+              {/* Full name */}
+              <InputField
+                id={`${uid}-name`}
+                label="Full name"
+                type="text"
+                value={displayName}
+                onChange={(e) => {
+                  setDisplayName(e.target.value);
+                  clearField("displayName");
+                }}
+                error={errors.displayName}
+                autoComplete="name"
+                placeholder="Jane Smith"
+              />
+
+              {/* Email */}
+              <InputField
+                id={`${uid}-email`}
+                label="Email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearField("email");
+                }}
+                error={errors.email}
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+
+              {/* Password */}
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={`${uid}-password`}
+                  className="text-xs font-medium tracking-widest uppercase text-stone-500 dark:text-stone-400"
+                >
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id={`${uid}-password`}
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      clearField("password");
+                    }}
+                    autoComplete="new-password"
+                    placeholder="Min. 8 characters"
+                    className={[
+                      "w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-stone-900 placeholder:text-stone-400",
+                      "outline-none transition-all duration-200",
+                      "dark:text-stone-100 dark:placeholder:text-stone-600",
+                      errors.password
+                        ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
+                        : "border-stone-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200/60 dark:border-stone-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/40",
+                    ].join(" ")}
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <EyeToggle
+                      visible={showPassword}
+                      onToggle={() => setShowPassword((v) => !v)}
+                    />
+                  </div>
                 </div>
 
-                {/* Server error banner */}
+                {/* Strength bar — only when something is typed */}
                 <AnimatePresence>
-                  {status === "error" && serverError && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900/60 dark:bg-red-950/40"
-                    >
-                      <svg
-                        className="mt-0.5 h-4 w-4 shrink-0 text-red-500"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 012 0v3a1 1 0 01-2 0V9zm1 7a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 16z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <p className="text-sm text-red-700 dark:text-red-300">
-                        {serverError}
-                      </p>
-                    </motion.div>
+                  {password && (
+                    <PasswordStrengthBar key="strength" password={password} />
                   )}
                 </AnimatePresence>
 
-                {/* Form */}
-                <motion.form
-                  onSubmit={handleSubmit}
-                  noValidate
-                  variants={
-                    status === "error" && Object.keys(errors).length
-                      ? shake
-                      : {}
-                  }
-                  animate={
-                    status === "error" && Object.keys(errors).length
-                      ? "shake"
-                      : undefined
-                  }
-                  className="flex flex-col gap-4"
+                <AnimatePresence mode="wait">
+                  {errors.password && (
+                    <motion.p
+                      key="pwd-err"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-xs text-red-500 dark:text-red-400"
+                    >
+                      {errors.password}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Confirm password */}
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor={`${uid}-confirm`}
+                  className="text-xs font-medium tracking-widest uppercase text-stone-500 dark:text-stone-400"
                 >
-                  {/* Full name */}
-                  <InputField
-                    id={`${uid}-name`}
-                    label="Full name"
-                    type="text"
-                    value={displayName}
+                  Confirm password
+                </label>
+                <div className="relative">
+                  <input
+                    id={`${uid}-confirm`}
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
                     onChange={(e) => {
-                      setDisplayName(e.target.value);
-                      clearField("displayName");
+                      setConfirmPassword(e.target.value);
+                      clearField("confirmPassword");
                     }}
-                    error={errors.displayName}
-                    autoComplete="name"
-                    placeholder="Jane Smith"
+                    autoComplete="new-password"
+                    placeholder="Repeat your password"
+                    className={[
+                      "w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-stone-900 placeholder:text-stone-400",
+                      "outline-none transition-all duration-200",
+                      "dark:text-stone-100 dark:placeholder:text-stone-600",
+                      errors.confirmPassword
+                        ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
+                        : confirmPassword && confirmPassword === password
+                          ? "border-emerald-400 focus:ring-2 focus:ring-emerald-300/40 dark:border-emerald-600 dark:focus:ring-emerald-700/30"
+                          : "border-stone-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200/60 dark:border-stone-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/40",
+                    ].join(" ")}
                   />
-
-                  {/* Email */}
-                  <InputField
-                    id={`${uid}-email`}
-                    label="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      clearField("email");
-                    }}
-                    error={errors.email}
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                  />
-
-                  {/* Password */}
-                  <div className="flex flex-col gap-1.5">
-                    <label
-                      htmlFor={`${uid}-password`}
-                      className="text-xs font-medium tracking-widest uppercase text-zinc-500 dark:text-zinc-400"
-                    >
-                      Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        id={`${uid}-password`}
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          clearField("password");
-                        }}
-                        autoComplete="new-password"
-                        placeholder="Min. 8 characters"
-                        className={[
-                          "w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-zinc-900 placeholder:text-zinc-400",
-                          "outline-none transition-all duration-200",
-                          "dark:text-zinc-100 dark:placeholder:text-zinc-600",
-                          errors.password
-                            ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
-                            : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40",
-                        ].join(" ")}
-                      />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <EyeToggle
-                          visible={showPassword}
-                          onToggle={() => setShowPassword((v) => !v)}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Strength bar — only when something is typed */}
+                  {/* Match indicator */}
+                  <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
                     <AnimatePresence>
-                      {password && (
-                        <PasswordStrengthBar
-                          key="strength"
-                          password={password}
-                        />
-                      )}
-                    </AnimatePresence>
-
-                    <AnimatePresence mode="wait">
-                      {errors.password && (
-                        <motion.p
-                          key="pwd-err"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="text-xs text-red-500 dark:text-red-400"
-                        >
-                          {errors.password}
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Confirm password */}
-                  <div className="flex flex-col gap-1.5">
-                    <label
-                      htmlFor={`${uid}-confirm`}
-                      className="text-xs font-medium tracking-widest uppercase text-zinc-500 dark:text-zinc-400"
-                    >
-                      Confirm password
-                    </label>
-                    <div className="relative">
-                      <input
-                        id={`${uid}-confirm`}
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={confirmPassword}
-                        onChange={(e) => {
-                          setConfirmPassword(e.target.value);
-                          clearField("confirmPassword");
-                        }}
-                        autoComplete="new-password"
-                        placeholder="Repeat your password"
-                        className={[
-                          "w-full rounded-lg border bg-transparent px-4 py-3 pr-11 text-sm text-zinc-900 placeholder:text-zinc-400",
-                          "outline-none transition-all duration-200",
-                          "dark:text-zinc-100 dark:placeholder:text-zinc-600",
-                          errors.confirmPassword
-                            ? "border-red-400 focus:ring-2 focus:ring-red-300/40 dark:border-red-600 dark:focus:ring-red-700/30"
-                            : confirmPassword && confirmPassword === password
-                              ? "border-emerald-400 focus:ring-2 focus:ring-emerald-300/40 dark:border-emerald-600 dark:focus:ring-emerald-700/30"
-                              : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-200/60 dark:border-zinc-700 dark:focus:border-zinc-500 dark:focus:ring-zinc-700/40",
-                        ].join(" ")}
-                      />
-                      {/* Match indicator */}
-                      <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
-                        <AnimatePresence>
-                          {confirmPassword && confirmPassword === password && (
-                            <motion.span
-                              initial={{ scale: 0, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              exit={{ scale: 0, opacity: 0 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 300,
-                                damping: 20,
-                              }}
-                            >
-                              <svg
-                                className="h-4 w-4 text-emerald-500"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                        <EyeToggle
-                          visible={showConfirmPassword}
-                          onToggle={() => setShowConfirmPassword((v) => !v)}
-                        />
-                      </div>
-                    </div>
-                    <AnimatePresence mode="wait">
-                      {errors.confirmPassword && (
-                        <motion.p
-                          key="confirm-err"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="text-xs text-red-500 dark:text-red-400"
-                        >
-                          {errors.confirmPassword}
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Terms checkbox */}
-                  <div className="flex flex-col gap-1">
-                    <label className="flex cursor-pointer items-start gap-3">
-                      <div className="relative mt-0.5 flex-shrink-0">
-                        <input
-                          id={`${uid}-terms`}
-                          type="checkbox"
-                          checked={agreedToTerms}
-                          onChange={(e) => {
-                            setAgreedToTerms(e.target.checked);
-                            clearField("agreedToTerms");
+                      {confirmPassword && confirmPassword === password && (
+                        <motion.span
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
                           }}
-                          className="peer sr-only"
-                        />
-                        {/* Custom checkbox */}
-                        <div
-                          className={[
-                            "flex h-4 w-4 items-center justify-center rounded border transition-all duration-150",
-                            "peer-focus-visible:ring-2 peer-focus-visible:ring-zinc-400 peer-focus-visible:ring-offset-1",
-                            agreedToTerms
-                              ? "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100"
-                              : errors.agreedToTerms
-                                ? "border-red-400 bg-transparent dark:border-red-600"
-                                : "border-zinc-300 bg-transparent dark:border-zinc-600",
-                          ].join(" ")}
                         >
-                          <AnimatePresence>
-                            {agreedToTerms && (
-                              <motion.svg
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0, opacity: 0 }}
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 400,
-                                  damping: 20,
-                                }}
-                                className="h-2.5 w-2.5 text-white dark:text-zinc-900"
-                                viewBox="0 0 10 10"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                              >
-                                <path
-                                  d="M2 5l2.5 2.5L8 2.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </motion.svg>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      </div>
-                      <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                        I agree to the{" "}
-                        <Link
-                          to="/terms"
-                          className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Terms of Service
-                        </Link>{" "}
-                        and{" "}
-                        <Link
-                          to="/privacy"
-                          className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Privacy Policy
-                        </Link>
-                        .
-                      </span>
-                    </label>
-                    <AnimatePresence mode="wait">
-                      {errors.agreedToTerms && (
-                        <motion.p
-                          key="terms-err"
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="pl-7 text-xs text-red-500 dark:text-red-400"
-                        >
-                          {errors.agreedToTerms}
-                        </motion.p>
+                          <svg
+                            className="h-4 w-4 text-emerald-500"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </motion.span>
                       )}
                     </AnimatePresence>
+                    <EyeToggle
+                      visible={showConfirmPassword}
+                      onToggle={() => setShowConfirmPassword((v) => !v)}
+                    />
                   </div>
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    disabled={status === "loading"}
-                    className="mt-1 w-full overflow-hidden rounded-lg bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-                  >
-                    {status === "loading" ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Spinner /> Creating account…
-                      </span>
-                    ) : (
-                      "Create account"
-                    )}
-                  </button>
-                </motion.form>
-
-                {/* Divider */}
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
-                  <span className="text-xs text-zinc-400">or</span>
-                  <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
                 </div>
+                <AnimatePresence mode="wait">
+                  {errors.confirmPassword && (
+                    <motion.p
+                      key="confirm-err"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-xs text-red-500 dark:text-red-400"
+                    >
+                      {errors.confirmPassword}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
 
-                {/* Login CTA */}
-                <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-                  Already have an account?{" "}
-                  <Link
-                    to="/auth/login"
-                    className="font-medium text-zinc-900 underline-offset-2 hover:underline dark:text-zinc-100"
-                  >
-                    Sign in
-                  </Link>
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+              {/* Terms checkbox */}
+              <div className="flex flex-col gap-1">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <div className="relative mt-0.5 flex-shrink-0">
+                    <input
+                      id={`${uid}-terms`}
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={(e) => {
+                        setAgreedToTerms(e.target.checked);
+                        clearField("agreedToTerms");
+                      }}
+                      className="peer sr-only"
+                    />
+                    {/* Custom checkbox */}
+                    <div
+                      className={[
+                        "flex h-4 w-4 items-center justify-center rounded border transition-all duration-150",
+                        "peer-focus-visible:ring-2 peer-focus-visible:ring-stone-400 peer-focus-visible:ring-offset-1",
+                        agreedToTerms
+                          ? "border-stone-900 bg-stone-900 dark:border-stone-100 dark:bg-stone-100"
+                          : errors.agreedToTerms
+                            ? "border-red-400 bg-transparent dark:border-red-600"
+                            : "border-stone-300 bg-transparent dark:border-stone-600",
+                      ].join(" ")}
+                    >
+                      <AnimatePresence>
+                        {agreedToTerms && (
+                          <motion.svg
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 20,
+                            }}
+                            className="h-2.5 w-2.5 text-white dark:text-stone-900"
+                            viewBox="0 0 10 10"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path
+                              d="M2 5l2.5 2.5L8 2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </motion.svg>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  <span className="text-sm text-stone-500 dark:text-stone-400">
+                    I agree to the{" "}
+                    <Link
+                      to="/terms"
+                      className="font-medium text-stone-900 underline-offset-2 hover:underline dark:text-stone-100"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      to="/privacy"
+                      className="font-medium text-stone-900 underline-offset-2 hover:underline dark:text-stone-100"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Privacy Policy
+                    </Link>
+                    .
+                  </span>
+                </label>
+                <AnimatePresence mode="wait">
+                  {errors.agreedToTerms && (
+                    <motion.p
+                      key="terms-err"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="pl-7 text-xs text-red-500 dark:text-red-400"
+                    >
+                      {errors.agreedToTerms}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
 
-        {/* Legal footer */}
-        <motion.p
-          custom={2}
-          variants={fadeUp}
-          className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-600"
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="mt-1 w-full overflow-hidden rounded-lg bg-stone-950 px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-amber-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-stone-100 dark:text-stone-950 dark:hover:bg-amber-400"
+              >
+                {status === "loading" ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Spinner /> Creating account…
+                  </span>
+                ) : (
+                  "Create account"
+                )}
+              </button>
+            </motion.form>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-stone-200 dark:bg-stone-800" />
+              <span className="text-xs text-stone-400">or</span>
+              <div className="h-px flex-1 bg-stone-200 dark:bg-stone-800" />
+            </div>
+
+            {/* Login CTA */}
+            <p className="text-center text-sm text-stone-500 dark:text-stone-400">
+              Already have an account?{" "}
+              <Link
+                to="/auth/login"
+                className="font-medium text-stone-900 underline-offset-2 hover:underline dark:text-stone-100"
+              >
+                Sign in
+              </Link>
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Legal footer */}
+      <p className="mt-6 text-center text-xs text-stone-400 dark:text-stone-600">
+        By creating an account you agree to our{" "}
+        <Link
+          to="/terms"
+          className="underline-offset-2 hover:underline hover:text-stone-600 dark:hover:text-stone-400"
         >
-          By creating an account you agree to our{" "}
-          <Link
-            to="/terms"
-            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
-          >
-            Terms
-          </Link>{" "}
-          and{" "}
-          <Link
-            to="/privacy"
-            className="underline-offset-2 hover:underline hover:text-zinc-600 dark:hover:text-zinc-400"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </motion.p>
-      </motion.div>
-    </div>
+          Terms
+        </Link>{" "}
+        and{" "}
+        <Link
+          to="/privacy"
+          className="underline-offset-2 hover:underline hover:text-stone-600 dark:hover:text-stone-400"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
+    </motion.div>
   );
 }

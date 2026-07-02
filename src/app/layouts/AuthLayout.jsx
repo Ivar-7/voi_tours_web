@@ -16,10 +16,10 @@ export default function AuthLayout() {
   }
 
   return (
-    <div className="min-h-dvh bg-[radial-gradient(circle_at_top,_#fdf8f0,_#f5f0e8_45%,_#efe7da_100%)] px-4 py-8 text-stone-900">
+    <div className="min-h-dvh bg-[radial-gradient(circle_at_top,_#fdf8f0,_#f5f0e8_45%,_#efe7da_100%)] px-4 py-8 text-stone-900 dark:bg-stone-950 dark:bg-none dark:text-stone-50">
       <RouteProgress />
       <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-6xl items-center justify-center">
-        <div className="grid w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-2xl shadow-stone-900/10 backdrop-blur md:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid w-full overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-2xl shadow-stone-900/10 backdrop-blur dark:border-stone-800 dark:bg-stone-900/90 md:grid-cols-[1.1fr_0.9fr]">
           <div className="hidden flex-col justify-between bg-stone-950 p-10 text-white md:flex">
             <div>
               <Link to="/" className="inline-flex items-center gap-3">
@@ -55,7 +55,7 @@ export default function AuthLayout() {
                   <span className="block font-serif text-lg font-bold">
                     Savanna Crown
                   </span>
-                  <span className="text-xs uppercase tracking-[0.25em] text-stone-500">
+                  <span className="text-xs uppercase tracking-[0.25em] text-stone-500 dark:text-stone-400">
                     Tours & Travel
                   </span>
                 </span>

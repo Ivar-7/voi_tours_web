@@ -50,7 +50,7 @@ export default function DestinationsPage() {
         <div className="relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-950 text-white shadow-2xl shadow-black/30">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=1600&q=85"
+              src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=85"
               alt="Kenya landscape"
               className="h-full w-full object-cover"
             />

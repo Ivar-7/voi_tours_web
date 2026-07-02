@@ -14,7 +14,7 @@
 - **Firebase** — Config/rules/indexes in `src/config/firebase`; rules are authorization-only, indexes stay minimal, deploy on change.
 - **Error Handling** — One shared error-handling layer for the whole app. Never show raw errors to users; log the error itself.
 - **Security & Cleanliness** — No hardcoded secrets (maintain `.env.example`). No dead code, no linter suppressions.
-- **Documentation** — Minimal but clear README for each feature.
+- **Documentation** — Minimal README for each feature.
 
 ## UI/UX
 - **Design Tokens** — Tailwind classes only. No arbitrary values.
@@ -23,8 +23,6 @@
 - **Component States** — Every feature handles 4 states: loading, empty, success, error.
 - **Layouts** — Mounted at the route level.
 
-## Mandatory Before Every Push
-- `npm run format`.
-- `npm run lint`.
-- `npm run build`.
-- Fix all warnings and errors;
+## Verification
+- **Before Finishing** — `npm run format`, `npm run lint`, `npm run build`. Fix all warnings and errors.
+- **Dev-Server Checks** — Required only for logic, state, or layout risk; reuse a running instance; end self-started instances once done.

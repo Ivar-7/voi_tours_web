@@ -1,6 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Menu, UserCircle2, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  Menu,
+  ShieldCheck,
+  UserCircle2,
+  X,
+} from "lucide-react";
 
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { logout } from "@features/auth/api/auth.api";
@@ -27,6 +33,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
+  const canManage = ["admin", "agent"].includes(user?.role);
 
   const initials = useMemo(() => {
     const name = user?.full_name || user?.email || "Guest";
@@ -94,10 +101,20 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
+              {canManage ? (
+                <Link
+                  to="/admin"
+                  className="hidden items-center gap-1.5 rounded-full border border-amber-500/40 px-4 py-2 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950/40 lg:inline-flex"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin
+                </Link>
+              ) : null}
               <Link
                 to="/dashboard"
-                className="hidden rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-stone-800 dark:text-stone-300 dark:hover:text-amber-300 md:inline-flex"
+                className="hidden items-center gap-1.5 rounded-full border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-stone-800 dark:text-stone-300 dark:hover:text-amber-300 md:inline-flex"
               >
+                <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </Link>
               <button
@@ -105,11 +122,15 @@ export default function Navbar() {
                 onClick={handleLogout}
                 className="hidden rounded-full bg-stone-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600 dark:bg-stone-100 dark:text-stone-950 dark:hover:bg-amber-400 md:inline-flex"
               >
-                Logout
+                Sign out
               </button>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800 dark:bg-amber-950/50 dark:text-amber-200">
+              <Link
+                to="/dashboard/profile"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-800 transition-transform hover:scale-105 dark:bg-amber-950/50 dark:text-amber-200"
+                aria-label="Your profile"
+              >
                 {initials || <UserCircle2 className="h-5 w-5" />}
-              </div>
+              </Link>
             </>
           ) : (
             <Link
@@ -155,6 +176,15 @@ export default function Navbar() {
 
             {isAuthenticated ? (
               <>
+                {canManage ? (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-amber-950/40"
+                  >
+                    Admin console
+                  </Link>
+                ) : null}
                 <Link
                   to="/dashboard"
                   onClick={() => setMobileOpen(false)}
@@ -170,7 +200,7 @@ export default function Navbar() {
                   }}
                   className="rounded-2xl bg-stone-950 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-600 dark:bg-stone-100 dark:text-stone-950 dark:hover:bg-amber-400"
                 >
-                  Logout
+                  Sign out
                 </button>
               </>
             ) : (

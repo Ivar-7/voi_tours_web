@@ -204,7 +204,7 @@ function Hero() {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=1600&q=85"
+          src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=85"
           alt="Savanna landscape at sunrise"
           onLoad={() => setImgLoaded(true)}
           className={[
@@ -224,74 +224,6 @@ function Hero() {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
         }}
       />
-
-      {/* Navbar */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-5 md:px-12 lg:px-20">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full border border-amber-500/50 bg-amber-600/20 backdrop-blur-sm">
-            <svg
-              className="h-5 w-5 text-amber-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-            >
-              <path
-                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
-                strokeLinecap="round"
-              />
-              <path d="M8 14s1.5 2 4 2 4-2 4-2" strokeLinecap="round" />
-              <path
-                d="M9 9h.01M15 9h.01"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-              />
-            </svg>
-          </div>
-          <div className="leading-tight">
-            <p className="font-serif text-sm font-bold tracking-wide text-white">
-              Savanna Crown
-            </p>
-            <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-amber-400/80">
-              Tours & Travel
-            </p>
-          </div>
-        </Link>
-
-        <div className="hidden items-center gap-8 md:flex">
-          {[
-            { label: "Services", to: "#services" },
-            { label: "Destinations", to: "/destinations" },
-            { label: "Packages", to: "/packages" },
-            { label: "Inquire", to: "/inquiry" },
-          ].map((item) =>
-            item.to.startsWith("#") ? (
-              <a
-                key={item.label}
-                href={item.to}
-                className="text-sm font-medium text-stone-200 transition-colors hover:text-amber-400"
-              >
-                {item.label}
-              </a>
-            ) : (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="text-sm font-medium text-stone-200 transition-colors hover:text-amber-400"
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
-        </div>
-
-        <Link
-          to="/dashboard/book/safari"
-          className="rounded-full bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-amber-500 active:scale-95"
-        >
-          Book Now
-        </Link>
-      </nav>
 
       {/* Hero content */}
       <div className="relative z-10 flex flex-1 flex-col justify-center px-6 pb-24 pt-12 md:px-12 lg:px-20">
